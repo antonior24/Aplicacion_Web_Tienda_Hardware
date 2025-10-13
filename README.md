@@ -44,16 +44,19 @@ erDiagram
         date established
         bool active
     }
+
     COMPANYINFO {
         string vat_number
         string contact_email
         text address
     }
+
     CATEGORY {
         string name
         string slug
         text description
     }
+
     PRODUCT {
         string sku
         string name
@@ -61,26 +64,31 @@ erDiagram
         decimal price
         int stock
     }
+
     PRODUCTCATEGORY {
         bool featured
         int display_order
     }
+
     CUSTOMER {
         string first_name
         string last_name
         string email
         string phone
     }
+
     PROFILE {
         date birth_date
         bool newsletter
         text notes
     }
+
     ORDER {
         datetime created_at
         char status
         decimal total
     }
+
     SHIPMENTDETAIL {
         string tracking_code
         date shipped_date
