@@ -125,3 +125,15 @@ validators: validadores (p.ej. MinValueValidator).
 choices: lista de tuplas para limitar valores.
 
 help_text, db_index, related_name, on_delete, auto_now_add — explicado brevemente en el README.
+
+Explicación de código no visto en clase (más detallada)
+
+unique_together (Meta): obliga unicidad combinada entre campos (product, category) para evitar duplicados en la tabla intermedia.
+
+related_name: nombre inverso para relaciones (ej. manufacturer.products) que facilita consultas desde la instancia objetivo.
+
+on_delete opciones: CASCADE, PROTECT, SET_NULL — se usan según la semántica: PROTECT evita borrar fabricantes si hay productos; SET_NULL permite mantener categorías si el padre se borra.
+
+validators: se usan con campos numéricos para asegurar rangos.
+
+auto_now_add=True en created_at guarda la fecha de creación automáticamente.
