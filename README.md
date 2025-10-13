@@ -1,1 +1,0 @@
-# Aplicacion_Web_Tienda_Hardware
