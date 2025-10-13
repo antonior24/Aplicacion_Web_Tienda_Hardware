@@ -25,68 +25,68 @@ Parámetros usados (ejemplos, al menos 10 distintos): max_length, unique, blank,
 
 Estos parámetros aparecen repartidos por los modelos para cumplir la condición.
 
+```mermaid
 erDiagram
-MANUFACTURER ||--o{ PRODUCT : produces
-MANUFACTURER ||--|| COMPANYINFO : has
-CATEGORY ||--o{ PRODUCTCATEGORY : contains
-PRODUCT ||--o{ PRODUCTCATEGORY : categorized_as
-PRODUCT ||--o{ ORDERITEM : included_in
-ORDER ||--o{ ORDERITEM : contains
-ORDER ||--|| SHIPMENTDETAIL : has
-CUSTOMER ||--o{ ORDER : places
-CUSTOMER ||--|| PROFILE : has
-CUSTOMER }o--o{ PRODUCT : wishlist
+    MANUFACTURER ||--o{ PRODUCT : produces
+    MANUFACTURER ||--|| COMPANYINFO : has
+    CATEGORY ||--o{ PRODUCTCATEGORY : contains
+    PRODUCT ||--o{ PRODUCTCATEGORY : categorized_as
+    PRODUCT ||--o{ ORDERITEM : included_in
+    ORDER ||--o{ ORDERITEM : contains
+    ORDER ||--|| SHIPMENTDETAIL : has
+    CUSTOMER ||--o{ ORDER : places
+    CUSTOMER ||--|| PROFILE : has
+    CUSTOMER }o--o{ PRODUCT : wishlist
 
+    MANUFACTURER {
+        string name
+        string website
+        date established
+        bool active
+    }
+    COMPANYINFO {
+        string vat_number
+        string contact_email
+        text address
+    }
+    CATEGORY {
+        string name
+        string slug
+        text description
+    }
+    PRODUCT {
+        string sku
+        string name
+        text description
+        decimal price
+        int stock
+    }
+    PRODUCTCATEGORY {
+        bool featured
+        int display_order
+    }
+    CUSTOMER {
+        string first_name
+        string last_name
+        string email
+        string phone
+    }
+    PROFILE {
+        date birth_date
+        bool newsletter
+        text notes
+    }
+    ORDER {
+        datetime created_at
+        char status
+        decimal total
+    }
+    SHIPMENTDETAIL {
+        string tracking_code
+        date shipped_date
+        date delivery_estimate
+    }
 
-MANUFACTURER {
-string name
-string website
-date established
-bool active
-}
-COMPANYINFO {
-string vat_number
-string contact_email
-text address
-}
-CATEGORY {
-string name
-string slug
-text description
-}
-PRODUCT {
-string sku
-string name
-text description
-decimal price
-int stock
-}
-PRODUCTCATEGORY {
-bool featured
-int display_order
-}
-CUSTOMER {
-string first_name
-string last_name
-string email
-string phone
-}
-PROFILE {
-date birth_date
-bool newsletter
-text notes
-}
-ORDER {
-datetime created_at
-char status
-decimal total
-}
-SHIPMENTDETAIL {
-string tracking_code
-date shipped_date
-date delivery_estimate
-}
-}
 
 Modelos y explicación (extracto breve)
 
