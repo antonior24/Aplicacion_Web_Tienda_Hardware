@@ -94,7 +94,7 @@ erDiagram
         date shipped_date
         date delivery_estimate
     }
-
+```
 
 Modelos y explicación (extracto breve)
 
