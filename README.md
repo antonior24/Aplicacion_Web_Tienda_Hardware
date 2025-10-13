@@ -145,3 +145,50 @@ on_delete opciones: CASCADE, PROTECT, SET_NULL — se usan según la semántica:
 validators: se usan con campos numéricos para asegurar rangos.
 
 auto_now_add=True en created_at guarda la fecha de creación automáticamente.
+
+#Propiedades no usadas
+
+manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT)
+Qué hace: Impide borrar un registro si otros lo están usando (protege la integridad).
+
+class ProductCategory(models.Model):
+    featured = models.BooleanField(default=False)
+    display_order = models.IntegerField(default=0, validators=[MinValueValidator(0)])
+Qué hace: Añadir campos personalizados a la relación (por ejemplo, si una categoría está destacada o el orden de visualización).
+
+created_at = models.DateTimeField(auto_now_add=True)
+default=timezone.now.
+Qué hace: auto_now_add guarda automáticamente la fecha y hora de creación del registro.
+
+name = models.CharField(max_length=100, unique=True, help_text="Nombre del fabricante")
+name = models.CharField(max_length=60, db_index=True)
+class Meta:
+    unique_together = ('product', 'category')
+manufacturer = models.ForeignKey(..., related_name='products')
+Qué hacen:
+
+help_text: texto de ayuda visible en el panel de administración.
+
+db_index: crea un índice para búsquedas más rápidas.
+
+unique_together: asegura unicidad combinada entre varios campos.
+
+related_name: define el nombre inverso de la relación (no solo para evitar conflictos, como en los apuntes, sino también para acceder más claro desde el otro modelo).
+
+website = models.URLField(blank=True, null=True)
+contact_email = models.EmailField(null=True, blank=True)
+slug = models.SlugField(max_length=70, unique=True)
+price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
+stock = models.PositiveIntegerField(default=0)
+Qué hacen:
+
+URLField y EmailField: validan automáticamente que el formato sea correcto.
+
+SlugField: genera identificadores de texto amigables para URLs.
+
+DecimalField: almacena decimales precisos (más exacto que FloatField).
+
+PositiveIntegerField: igual que IntegerField, pero solo permite enteros ≥ 0.
+
+from django.core.validators import MinValueValidator, MaxValueValidator
+Qué hacen: Permiten limitar valores de campos numéricos. Por ejemplo, impedir precios negativos o limitar rangos.
