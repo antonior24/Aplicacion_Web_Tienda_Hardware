@@ -39,8 +39,8 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)])
     stock = models.PositiveIntegerField(default=0)
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT, related_name='products')
-    categories = models.ManyToManyField(Category, through='ProductCategory', related_name='products')
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.PROTECT, related_name='producto_manufacturer')
+    categories = models.ManyToManyField(Category, through='ProductCategory', related_name='producto_categories')
 
     def __str__(self):
         return f"{self.sku} - {self.name}"

@@ -11,6 +11,12 @@
             <h2> Nombre: {{ productos.name }}</h2>
             <p>sku: {{ productos.sku }}</p>
             <p>Fabricante: {{ productos.manufacturer.name }}</p>
+            <p>Precio: {{ productos.price }}</p>
+            <p>Stock: {{ productos.stock }}</p>
+            <p>Categorias:</p>
+            {% for categoria in productos.categories.all %}
+                <li>{{ categoria.name }}</li>
+            {% endfor %}
         </div>
     {% endfor %}
 </body>
