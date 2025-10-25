@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for manufacturers in fabricantes_mostrar %}
+        <div>
+            <h2> Nombre: {{ manufacturers.name }}</h2>
+            <p>web: {{ manufacturers.website }}</p>
+            <p>established: {{ manufacturers.established }}</p>
+            <p>active: {{ manufacturers.active }}</p>
+            <p>Productos:</p>
+            {% for producto in manufacturers.producto_manufacturer.all %}
+                <li>{{ producto.name }}</li>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>
