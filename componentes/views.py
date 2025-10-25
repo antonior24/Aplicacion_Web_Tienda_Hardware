@@ -16,3 +16,7 @@ def manufacturers_list(request):
     fabricantes = fabricantes.all()
     return render(request, 'componentes/manufacturers_list.html', {"fabricantes_mostrar": fabricantes})
 
+def product_detail(request, product_id):
+    producto = Product.objects.select_related("manufacturer").prefetch_related("categories").get(id=product_id)
+    return render(request, 'componentes/detalles_producto.html', {"producto_mostrar": producto})
+

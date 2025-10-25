@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h2> Nombre: {{ producto_mostrar.name }}</h2>
+        <p>sku: {{ producto_mostrar.sku }}</p>
+        <p>Fabricante: {{ producto_mostrar.manufacturer.name }}</p>
+        <p>Precio: {{ producto_mostrar.price }}</p>
+        <p>Stock: {{ producto_mostrar.stock }}</p>
+        <p>Categorias:</p>
+        {% for categoria in producto_mostrar.categories.all %}
+            <li>{{ categoria.name }}</li>
+        {% endfor %}
+    </div>
+</body>
+</html>

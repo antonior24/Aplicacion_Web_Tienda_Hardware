@@ -18,6 +18,7 @@
                 <li>{{ categoria.name }}</li>
             {% endfor %}
         </div>
+        <a href="{% url 'product_detail' productos.id %}">Ver detalles</a>
     {% endfor %}
 </body>
 </html>
