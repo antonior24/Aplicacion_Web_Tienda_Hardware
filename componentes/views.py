@@ -20,3 +20,6 @@ def product_detail(request, product_id):
     producto = Product.objects.select_related("manufacturer").prefetch_related("categories").get(id=product_id)
     return render(request, 'componentes/detalles_producto.html', {"producto_mostrar": producto})
 
+def product_by_sku(request, sku):
+    producto = Product.objects.select_related("manufacturer").prefetch_related("categories").get(sku=sku)
+    return render(request, 'componentes/detalles_producto.html', {"producto_mostrar": producto})
