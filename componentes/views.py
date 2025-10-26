@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
@@ -61,3 +62,24 @@ def products_never_ordered(request):
     productos = Product.objects.select_related("manufacturer").prefetch_related("categories")
     productos = productos.filter(orderitem__isnull=True)
     return render(request, 'componentes/products_never_ordered.html', {"productos_no_pedidos": productos})
+
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Manufacturer
+
+def dame_fabricantes(request, texto):
+    print("Texto recibido:", texto)  # Debug
+
+    fabricantes = Manufacturer.objects.filter(
+        (Q(name__icontains=texto) | Q(website__icontains=texto)) & Q(active=True)
+    ).order_by("name")
+
+    print("Fabricantes encontrados:", list(fabricantes))  # Debug
+
+    return render(request, "componentes/manufacturers_list.html", {"fabricantes_mostrar": fabricantes})
+
+
+def test_search(request, texto):
+    print("=== TEST VIEW EJECUTADA ===")
+    print("Texto recibido:", texto)
+    return HttpResponse(f"Has buscado: {texto}")
