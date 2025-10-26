@@ -1,4 +1,5 @@
 # Aplicacion_Web_Tienda_Hardware
+Hay que hacer loaddata de datos_urls.json
 Tipos de campo usados (no-relacionales):
 
 CharField
