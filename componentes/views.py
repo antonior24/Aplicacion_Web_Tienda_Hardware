@@ -49,3 +49,10 @@ def pedidos_cliente(request, customer_id):
         'cliente': cliente,
         'pedidos': pedidos
     })
+    
+def last_order_for_product(request, product_id):
+    """
+    Muestra el último pedido que contiene un producto concreto.
+    """ 
+    order = Order.objects.filter(items__product_id=product_id).order_by('-created_at')[0]
+    return render(request, 'componentes/last_order_for_product.html', {'order': order})
