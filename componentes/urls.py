@@ -16,5 +16,5 @@ urlpatterns = [
     path('clientes/<int:customer_id>/pedidos/', views.pedidos_cliente, name='pedidos_cliente'),
     path('orders/last-for-product/<int:product_id>/', views.last_order_for_product, name='last_order_for_product'),
     path('products/never-ordered/', views.products_never_ordered, name='products_never_ordered'),
-    
+    path('stats/manufacturers/products-count/', views.stats_manufacturers_products, name='stats_manufacturers_products'),
 ]

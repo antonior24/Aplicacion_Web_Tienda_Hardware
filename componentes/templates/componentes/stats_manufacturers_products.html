@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Fabricantes</title>
+</head>
+<body>
+    <h1>Fabricantes y número de productos</h1>
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Total de productos</th>
+        </tr>
+        {% for f in fabricantes %}
+        <tr>
+            <td>{{ f.name }}</td>
+            <td>{{ f.productos_total }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

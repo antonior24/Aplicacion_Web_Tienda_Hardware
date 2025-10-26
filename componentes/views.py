@@ -1,3 +1,4 @@
+from itertools import count
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
@@ -83,3 +84,25 @@ def test_search(request, texto):
     print("=== TEST VIEW EJECUTADA ===")
     print("Texto recibido:", texto)
     return HttpResponse(f"Has buscado: {texto}")
+
+def stats_manufacturers_products(request):
+    """
+    Vista: Muestra estadísticas de los fabricantes (Manufacturer) con el número de productos asociados.
+    SQL (aprox):
+    -- SELECT m.id, m.name, COUNT(p.id) AS productos_total
+    -- FROM manufacturer m
+    -- LEFT JOIN product p ON p.manufacturer_id = m.id
+    -- GROUP BY m.id
+    -- ORDER BY productos_total DESC;
+    """
+    fabricantes = (
+        Manufacturer.objects
+        .annotate(total_productos=count('producto_manufacturer'))
+        .order_by('-total_productos')
+    )
+
+    return render(
+        request,
+        'componentes/stats_manufacturers_products.html',
+        {'fabricantes': fabricantes}
+    )
