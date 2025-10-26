@@ -32,3 +32,20 @@ def products_by_category(request, slug):
 def manufacturers_by_year_month(request, year, month):
     fabricantes = Manufacturer.objects.filter(established__year=year, established__month=month)
     return render(request, 'componentes/manufacturers_list.html', {"fabricantes_mostrar": fabricantes})
+
+def orders_by_customer (request, customer_id):
+    ordenes = Order.objects.filter(customer__id=customer_id).prefetch_related(
+        Prefetch('products')).order_by('-created_at')
+    return render(request, 'componentes/orders_list.html', {"ordenes_mostrar": ordenes})
+
+def pedidos_cliente(request, customer_id):
+    """
+    Muestra todos los pedidos de un cliente usando la relación inversa (Customer → Order)
+    optimizada con Prefetch, como en los apuntes.
+    """
+    cliente = Customer.objects.prefetch_related(Prefetch("orders")).get(id=customer_id)
+    pedidos = cliente.orders.all()   # relación inversa optimizada
+    return render(request, 'componentes/pedidos_cliente.html', {
+        'cliente': cliente,
+        'pedidos': pedidos
+    })

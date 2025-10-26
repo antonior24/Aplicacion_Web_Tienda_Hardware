@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos del cliente</title>
+</head>
+<body>
+    <h1>Pedidos de {{ cliente.first_name }} {{ cliente.last_name }}</h1>
+
+    {% for pedido in pedidos %}
+        <h3>Pedido nº {{ pedido.id }}</h3>
+        <p>Estado: {{ pedido.get_status_display }}</p>
+        <p>Fecha: {{ pedido.created_at }}</p>
+        <p>Total: {{ pedido.total }} €</p>
+
+        <h4>Productos:</h4>
+        {% for item in pedido.items.all %}
+            <li>{{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }} €</li>
+        {% endfor %}
+        <hr>
+    {% endfor %}
+</body>
+</html>
