@@ -21,3 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('componentes.urls')),
 ]
+
+handler404 = "componentes.views.mi_error_404"
+handler500 = "componentes.views.mi_error_500"
+handler403 = "componentes.views.mi_error_403"
+handler400 = "componentes.views.mi_error_400"

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
+from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
 
 # Create your views here.
 def home(request):
@@ -106,3 +107,15 @@ def stats_manufacturers_products(request):
         'componentes/stats_manufacturers_products.html',
         {'fabricantes': fabricantes}
     )
+    
+def mi_error_404(request, exception=None):
+    return render(request, 'componentes/errores/404.html', None, None, 404)
+
+def mi_error_500(request):
+    return render(request, 'componentes/errores/500.html', status=500)
+
+def mi_error_403(request, exception=None):
+    return render(request, 'componentes/errores/403.html', None, None, 403)
+
+def mi_error_400(request, exception=None):
+    return render(request, 'componentes/errores/400.html', None, None, 400)
