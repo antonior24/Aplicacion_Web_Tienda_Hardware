@@ -11,5 +11,5 @@ urlpatterns = [
     path('manufacturers/date/<int:year>/<int:month>/', views.manufacturers_by_year_month, name='manufacturers_by_year_month'),
     path('clientes/<int:customer_id>/pedidos/', views.pedidos_cliente, name='pedidos_cliente'),
     path('orders/last-for-product/<int:product_id>/', views.last_order_for_product, name='last_order_for_product'),
-
+    path('products/never-ordered/', views.products_never_ordered, name='products_never_ordered'),
 ]

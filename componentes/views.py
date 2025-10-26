@@ -56,3 +56,8 @@ def last_order_for_product(request, product_id):
     """ 
     order = Order.objects.filter(items__product_id=product_id).order_by('-created_at')[0]
     return render(request, 'componentes/last_order_for_product.html', {'order': order})
+
+def products_never_ordered(request):
+    productos = Product.objects.select_related("manufacturer").prefetch_related("categories")
+    productos = productos.filter(orderitem__isnull=True)
+    return render(request, 'componentes/products_never_ordered.html', {"productos_no_pedidos": productos})
