@@ -28,3 +28,7 @@ def products_by_category(request, slug):
     categoria = Category.objects.get(slug=slug)
     productos = Product.objects.filter(categories=categoria).select_related("manufacturer").prefetch_related("categories").order_by("price")
     return render(request, 'componentes/product_list.html', {"productos_mostrar": productos})
+
+def manufacturers_by_year_month(request, year, month):
+    fabricantes = Manufacturer.objects.filter(established__year=year, established__month=month)
+    return render(request, 'componentes/manufacturers_list.html', {"fabricantes_mostrar": fabricantes})
