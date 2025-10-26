@@ -1,5 +1,72 @@
 # Aplicacion_Web_Tienda_Hardware
 Hay que hacer loaddata de datos_urls.json
+
+🌐 URLs principales (urls.py)
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('products/', views.product_list, name='product_list'),
+    path('manufacturers/', views.manufacturers_list, name='manufacturers_list'),
+    path('manufacturers/search/<str:texto>/', views.dame_fabricantes, name='dame_fabricantes'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    re_path(r'^product/sku/(?P<sku>[A-Z0-9\-]{3,30})/$', views.product_by_sku, name='product_by_sku'),
+    path('products/category/<str:slug>/', views.products_by_category, name='products_by_category'),
+    path('manufacturers/date/<int:year>/<int:month>/', views.manufacturers_by_year_month, name='manufacturers_by_year_month'),
+    path('clientes/<int:customer_id>/pedidos/', views.pedidos_cliente, name='pedidos_cliente'),
+    path('orders/last-for-product/<int:product_id>/', views.last_order_for_product, name='last_order_for_product'),
+    path('products/never-ordered/', views.products_never_ordered, name='products_never_ordered'),
+]
+
+
+Cada ruta conecta una URL con su vista correspondiente definida en views.py.
+
+⚙️ Vistas principales (views.py)
+Vista	Descripción breve
+home	Página principal con enlaces a las demás.
+product_list	Lista todos los productos con fabricante y categorías.
+manufacturers_list	Muestra todos los fabricantes.
+product_detail / product_by_sku	Detalle de producto por ID o SKU.
+products_by_category	Filtra productos por categoría.
+manufacturers_by_year_month	Filtra fabricantes por año y mes de fundación.
+pedidos_cliente	Pedidos de un cliente concreto.
+products_never_ordered	Productos que nunca se han pedido.
+dame_fabricantes	Busca fabricantes activos por texto.
+stats_manufacturers_products	Estadísticas de fabricantes con sus productos.
+⚠️ Errores destacados y soluciones
+
+FieldError: fecha_fundacion → usar established
+→ El modelo no tenía ese campo.
+
+NoReverseMatch
+→ Enlaces usaban variables incorrectas. Se corrigió en el template y la URL.
+
+Página en blanco al buscar fabricantes
+→ El contexto debía llamarse fabricantes_mostrar.
+
+Puerto en uso (8000)
+→ Solución: sudo lsof -t -i:8000 | xargs kill -9.
+
+⚠️ Páginas de error personalizadas
+
+El proyecto define vistas para manejar los errores más comunes con plantillas específicas en templates/componentes/errores/.
+
+Error	Vista	Plantilla	Descripción
+400 — Bad Request	mi_error_400()	400.html	Se muestra cuando la petición no es válida.
+403 — Forbidden	mi_error_403()	403.html	Aparece si el usuario no tiene permiso para acceder.
+404 — Not Found	mi_error_404()	404.html	Página mostrada cuando la URL no existe.
+500 — Server Error	mi_error_500()	500.html	Error interno del servidor.
+
+Para activarlas en modo producción, se debe poner en settings.py:
+
+DEBUG = False
+
+
+y añadir en urls.py del proyecto principal:
+
+handler400 = 'componentes.views.mi_error_400'
+handler403 = 'componentes.views.mi_error_403'
+handler404 = 'componentes.views.mi_error_404'
+handler500 = 'componentes.views.mi_error_500'
+
 Tipos de campo usados (no-relacionales):
 
 CharField
