@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "./includes/header.html" %}
+{% load static %}
+{% block contenido %}
     <h1>Este es el home de nuestro Proyecto</h1>
     <p><a href="{% url 'product_list' %}">Lista de productos</a></p>
     <p><a href="{% url 'manufacturers_list' %}">Lista de fabricantes</a></p>
@@ -17,5 +12,5 @@
     <p><a href="{% url 'products_never_ordered' %}">Productos nunca pedidos</a></p>
     <p><a href="{% url 'dame_fabricantes' 'Require' %}">Buscar fabricantes con texto "Require"</a></p>
     <p><a href="{% url 'dame_fabricantes' 'martin' %}">Buscar fabricantes con texto "martin"</a></p>
-</body>
-</html>
+{% endblock contenido %}
+   
