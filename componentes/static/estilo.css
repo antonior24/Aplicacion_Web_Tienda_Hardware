@@ -4,3 +4,11 @@ header {
     padding: 10px 0;
     text-align: center;
 }
+
+.contenido-footer {
+    background-color: #e06262;
+    color: #333;
+    padding: 10px 0;
+    text-align: center;
+    margin-top: 20px;
+}

@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "./home.html" %}
+    {% block cabecera %}
     {% for manufacturers in fabricantes_mostrar %}
         <div>
             <h2> Nombre: {{ manufacturers.name }}</h2>
@@ -21,5 +15,4 @@
             {% endfor %}
         </div>
     {% endfor %}
-</body>
-</html>
+    {% endblock cabecera %}

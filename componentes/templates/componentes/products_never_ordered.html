@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Productos nunca pedidos</title>
-</head>
-<body>
+{% extends "./home.html" %}
+    {% block cabecera %}
     <h1>Productos que nunca han estado en ningún pedido</h1>
 
     {% for producto in productos_no_pedidos %}
@@ -14,5 +9,4 @@
         <p>Stock: {{ producto.stock }}</p>
         <hr>
     {% endfor %}
-</body>
-</html>
+    {% endblock cabecera %}

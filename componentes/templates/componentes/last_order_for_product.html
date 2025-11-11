@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Último pedido del producto</title>
-</head>
-<body>
+{% extends "./home.html" %}
+    {% block cabecera %}
     <p>Número de pedido: {{ order.id }}</p>
     <p>Cliente: {{ order.customer.first_name }} {{ order.customer.last_name }}</p>
     <p>Fecha: {{ order.created_at }}</p>
@@ -14,5 +9,4 @@
     {% for item in order.items.all %}
         <li>{{ item.product.name }} — Cantidad: {{ item.quantity }} — Precio: {{ item.unit_price }} €</li>
     {% endfor %}
-</body>
-</html>
+    {% endblock cabecera %}
