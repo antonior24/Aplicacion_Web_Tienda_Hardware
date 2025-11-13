@@ -7,10 +7,7 @@
             <th>Total de productos</th>
         </tr>
         {% for f in fabricantes %}
-        <tr>
-            <td>{{ f.name }}</td>
-            <td>{{ f.productos_total }}</td>
-        </tr>
+            {% include "componentes/includes/stat_manufacturer.html" %}
         {% endfor %}
     </table>
     {% endblock cabecera %}

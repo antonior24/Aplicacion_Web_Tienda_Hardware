@@ -3,10 +3,6 @@
     <h1>Productos que nunca han estado en ningún pedido</h1>
 
     {% for producto in productos_no_pedidos %}
-        <h3>{{ producto.name }}</h3>
-        <p>Fabricante: {{ producto.manufacturer.name }}</p>
-        <p>Precio: {{ producto.price }} €</p>
-        <p>Stock: {{ producto.stock }}</p>
-        <hr>
+        {% include "componentes/includes/no_ordenados.html" %}
     {% endfor %}
     {% endblock cabecera %}

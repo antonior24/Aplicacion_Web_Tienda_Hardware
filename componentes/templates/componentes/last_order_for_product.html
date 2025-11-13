@@ -7,6 +7,6 @@
 
     <h3>Productos en el pedido:</h3>
     {% for item in order.items.all %}
-        <li>{{ item.product.name }} — Cantidad: {{ item.quantity }} — Precio: {{ item.unit_price }} €</li>
+        {% include "componentes/includes/ultimo.html" %}
     {% endfor %}
     {% endblock cabecera %}

@@ -1,9 +1,5 @@
+{% load static %}
   <div class="logo">
-    <img src="logo.png" alt="Logo del sitio">
+    <img src="{% static "generated-image.png" %}" alt="Logo del sitio" id="logo">
     <h1>Mi Sitio Web</h1>
   </div>
-
-  <nav class="menu">
-    {% block contenido %}
-    {% endblock contenido %}
-  </nav>

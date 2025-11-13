@@ -1,18 +1,6 @@
 {% extends "./home.html" %}
     {% block cabecera %}
     {% for manufacturers in fabricantes_mostrar %}
-        <div>
-            <h2> Nombre: {{ manufacturers.name }}</h2>
-            <p>web: {{ manufacturers.website }}</p>
-            <p>established: {{ manufacturers.established }}</p>
-            {% if manufacturers.established %}
-                <a href="{% url 'manufacturers_by_year_month' year=manufacturers.established.year month=manufacturers.established.month %}">Ver detalles</a>
-            {% endif %}
-            <p>active: {{ manufacturers.active }}</p>
-            <p>Productos:</p>
-            {% for producto in manufacturers.producto_manufacturer.all %}
-                <li>{{ producto.name }}</li>
-            {% endfor %}
-        </div>
+        {% include "componentes/includes/manufacturer.html" %}
     {% endfor %}
     {% endblock cabecera %}

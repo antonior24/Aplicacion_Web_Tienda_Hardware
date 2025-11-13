@@ -2,6 +2,9 @@ header {
     background-color: #333;
     color: white;
     padding: 10px 0;
+}
+
+.cabeza {
     text-align: center;
 }
 
@@ -11,4 +14,10 @@ header {
     padding: 10px 0;
     text-align: center;
     margin-top: 20px;
+}
+
+#logo {
+    margin-left: 10px;
+    height: 100px;
+    text-align: left;
 }
