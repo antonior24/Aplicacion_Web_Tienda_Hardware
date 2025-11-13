@@ -1,18 +1,6 @@
 {% extends "./home.html" %}
     {% block cabecera %}
         {% for productos in productos_mostrar %}
-            <div>
-                <h2> Nombre: {{ productos.name }}</h2>
-                <p>sku: {{ productos.sku }}</p>
-                <p>Fabricante: {{ productos.manufacturer.name }}</p>
-                <p>Precio: {{ productos.price }}</p>
-                <p>Stock: {{ productos.stock }}</p>
-                <p>Categorias:</p>
-                {% for categoria in productos.categories.all %}
-                    <li>{{ categoria.name }}</li>
-                    <li><a href="{% url 'products_by_category' categoria.slug %}">Ver más en esta categoría</a></li>
-                {% endfor %}
-            </div>
-            <a href="{% url 'product_detail' productos.id %}">Ver detalles</a>
+            {% include "componentes/includes/producto.html" %}
         {% endfor %}
     {% endblock cabecera %}

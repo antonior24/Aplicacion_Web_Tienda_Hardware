@@ -1,0 +1,21 @@
+{% load static %}
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header con Menú Superior</title>
+    <link rel="stylesheet" href="{% static 'estilo.css' %}">
+    </head>
+    <body>
+    <header>
+        {% include "componentes/includes/header.html" %}
+        {% block contenido %}{% endblock contenido %}
+    </header>
+    {% block cabecera %}
+    {% endblock cabecera %}
+    <footer>
+    {% include "componentes/includes/footer.html" %}
+    </footer>
+    </body>
+    </html>
