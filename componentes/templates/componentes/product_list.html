@@ -1,6 +1,6 @@
 {% extends "./home.html" %}
     {% block cabecera %}
         {% for productos in productos_mostrar %}
-            {% include "componentes/includes/producto.html" %}
+            {% include "componentes/includes/producto.html" %} {# Template tag include 3 #}
         {% endfor %}
     {% endblock cabecera %}

@@ -1,13 +1,22 @@
 <div>
-    <h2> Nombre: {{ productos.name }}</h2>
-    <p>sku: {{ productos.sku }}</p>
+    <h2> Nombre: {{ productos.name | title }}</h2> {# Filter title 4 #}
+    <p>sku: {{ productos.sku | upper }}</p> {# Filter upper 3 #}
     <p>Fabricante: {{ productos.manufacturer.name }}</p>
     <p>Precio: {{ productos.price }}</p>
-    <p>Stock: {{ productos.stock }}</p>
+    {% if productos.stock == 0 %} {# IF == 1 #}
+        <p>Stock: Agotado</p>
+    {% else %}
+        <p>Stock: {{ productos.stock }}</p>
+    {% endif %}
     <p>Categorias:</p>
     {% for categoria in productos.categories.all %}
-        <li>{{ categoria.name }}</li>
+        {% if categoria.name != "Ofertas" %} {# IF != 3 #}
+            <span>No es oferta</span>
+        {% endif %}
+        <li>{{ categoria.name | capfirst }}</li> {# Filter capfirst 5 #}
         <li><a href="{% url 'products_by_category' categoria.slug %}">Ver más en esta categoría</a></li>
+    {% empty %} {# Template tag empty 1 #}
+        <li>Este producto no tiene categorías asignadas.</li> 
     {% endfor %}
 </div>
 <a href="{% url 'product_detail' productos.id %}">Ver detalles</a>

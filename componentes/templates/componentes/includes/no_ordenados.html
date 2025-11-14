@@ -1,5 +1,10 @@
 <h3>{{ producto.name }}</h3>
-    <p>Fabricante: {{ producto.manufacturer.name }}</p>
+    {# IF or 2 #} {# filter lower 1 #}
+    {% if producto.manufacturer.name == "Great summer one production student. Goal morning born mother month effort." or "wrong" in producto.manufacturer.name|lower %}
+        <p><strong>Fabricante: </strong>{{ producto.manufacturer.name }} (¡Fabricante destacado!)</p>
+    {% else %}
+        <p>Fabricante: {{ producto.manufacturer.name }}</p>
+    {% endif %}
     <p>Precio: {{ producto.price }} €</p>
     <p>Stock: {{ producto.stock }}</p>
     <hr>

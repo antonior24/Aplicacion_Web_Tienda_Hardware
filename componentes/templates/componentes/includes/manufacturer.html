@@ -1,13 +1,19 @@
-<div>
-    <h2> Nombre: {{ manufacturers.name }}</h2>
+{% if manufacturers.active %} {# Template tag if not 2 #}
+    <div>
+    <h2> Nombre: {{ manufacturers.name | cut:"A" }}</h2> {# Filter cut 6 #}
     <p>web: {{ manufacturers.website }}</p>
-    <p>established: {{ manufacturers.established }}</p>
+    <p>established: {{ manufacturers.established | date:"d/m/Y" }}</p>
     {% if manufacturers.established %}
         <a href="{% url 'manufacturers_by_year_month' year=manufacturers.established.year month=manufacturers.established.month %}">Ver detalles</a>
     {% endif %}
-    <p>active: {{ manufacturers.active }}</p>
+    <p>active: {{ manufacturers.active | yesno:"Sí,No" }}</p> {# Filter yesno 7 #}
     <p>Productos:</p>
-    {% for producto in manufacturers.producto_manufacturer.all %}
-        <li>{{ producto.name }}</li>
+    {% for producto in manufacturers.producto_manufacturer.all %} 
+        <li>{{ producto.name | lower }}</li> {# Filter lower 8 #}
     {% endfor %}
+    {# IF and 5 #}
+    {% if manufacturers.established and manufacturers.established.year == 2009 and manufacturers.established.month == 7 %}
+        <p><strong>¡Fabricante destacado!</strong></p>
+    {% endif %}
 </div>
+{% endif %}

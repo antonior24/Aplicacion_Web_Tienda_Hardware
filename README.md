@@ -1,6 +1,100 @@
 # Aplicacion_Web_Tienda_Hardware
 Hay que hacer loaddata de datos_urls.json
 
+1. Template Tags
+    
+    1- En la plantilla producto.html 
+    {% for categoria in productos.categories.all %}
+        <li>{{ categoria.name }}</li>
+        <li><a href="{% url 'products_by_category' categoria.slug %}">Ver más en esta categoría</a></li>
+    {% empty %} {# Template tag empty 1 #}
+        <li>Este producto no tiene categorías asignadas.</li> 
+    {% endfor %}
+
+    2-En la plantilla manufacturer.html
+        {% if manufacturers.active %} {# Template tag if not 2 #}
+            ..contenido
+        {% endif %}
+
+    3-En el html product_list.html:
+        {% include "componentes/includes/producto.html" %} {# Template tag include 3 #}
+
+    4-En manufacturers_list.html:
+        {% extends "./home.html" %} {# Template tag extends y block 4 #}
+        {% block cabecera %} {# Template tag extends y block 4 #}
+        {% for manufacturers in fabricantes_mostrar %}
+            {% include "componentes/includes/manufacturer.html" %}
+        {% endfor %}
+        {% endblock cabecera %} {# Template tag extends y block 4 #}
+    
+    5-En header.html:
+        {% filter force_escape|upper %} {# Template tag filter 5 #}
+        esta es una descripción del sitio web en minúsculas y con caracteres escapados & < >
+        {% endfilter %}
+
+2. Operadores IF
+    1-En la plantilla producto.html: Operador ==
+        {% if productos.stock == 0 %} {# IF == 1 #}
+            <p>Stock: Agotado</p>
+        {% else %}
+            <p>Stock: {{ productos.stock }}</p>
+        {% endif %}
+    
+    2-En la plantilla no_ordenados.html: Operador or
+        {% if producto.manufacturer.name == "Great summer one production student. Goal morning born mother month effort." or "wrong" in producto.manufacturer.name|lower %}
+        <p><strong>Fabricante: </strong>{{ producto.manufacturer.name }} (¡Fabricante destacado!)</p>
+        {% else %}
+    
+    3-En la plantilla producto.html: Operador !=
+        {% if categoria.name != "Ofertas" %} {# IF != 3 #}
+            <span>No es oferta</span>
+        {% endif %}
+
+    4-En la plantilla detalles_producto.html: operador <
+        {% if producto_mostrar.price < 5 %} {# IF < 4 #}
+            <p>Precio: {{ producto_mostrar.price }} (Es barato)</p>
+        {% else %}
+            <p>Precio: {{ producto_mostrar.price }} Es un precio razonable </p>
+        {% endif %}
+
+    5-En la plantilla manufacturer.html: operador and
+        {% if manufacturers.established and manufacturers.established.year == 2009 and manufacturers.established.month == 7 %}
+        <p><strong>¡Fabricante destacado!</strong></p>
+        {% endif %}
+
+3.Uso de FILTERS
+    1-FILTER DATE: pedido.html, manufacturer.html y last_order_for_product.html
+        1.<p>Fecha: {{ pedido.created_at | date:"d/m/Y" }}</p>
+        2.<p>established: {{ manufacturers.established | date:"d/m/Y" }}</p>
+        3.<p>Fecha: {{ order.created_at | date:"d/m/Y" }} a las {{ order.created_at | time:"H:i" }}</p>
+
+    2-FILTER TIME: last_order_for_product.html
+        <p>Fecha: {{ order.created_at | date:"d/m/Y" }} a las {{ order.created_at | time:"H:i" }}</p>
+
+    3-FILTER UPPER: producto.html
+        <p>sku: {{ productos.sku | upper }}</p> 
+
+    4-FILTER TITTLE: producto.html
+        <h2> Nombre: {{ productos.name | title }}</h2>
+
+    5-FILTER CAPFIRST: producto.html
+        <li>{{ categoria.name | capfirst }}</li>
+
+    6-FILTER CUT: manufacturer.html
+        <h2> Nombre: {{ manufacturers.name | cut:"A" }}</h2>
+
+    7-FILTER YESNO: manufacturer.html
+        <p>active: {{ manufacturers.active | yesno:"Sí,No" }}</p>
+
+    8-FILTER LOWER: manufacturer.html
+        <li>{{ producto.name | lower }}</li>
+
+    9-FILTER LENGTH: pedido.html
+        <li>{{ item.product.name }} length: {{ item.product.name|length }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }} €</li>
+
+    10-FILTER FIRST: ultimo.html
+        <li>{{ item.product.name | first }} — Cantidad: {{ item.quantity }} — Precio: {{ item.unit_price }} €</li>
+
 🌐 URLs principales (urls.py)
 urlpatterns = [
     path('', views.home, name='home'),

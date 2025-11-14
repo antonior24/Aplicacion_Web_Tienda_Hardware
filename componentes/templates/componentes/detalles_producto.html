@@ -4,7 +4,11 @@
         <h2> Nombre: {{ producto_mostrar.name }}</h2>
         <p>sku: {{ producto_mostrar.sku }}</p>
         <p>Fabricante: {{ producto_mostrar.manufacturer.name }}</p>
-        <p>Precio: {{ producto_mostrar.price }}</p>
+        {% if producto_mostrar.price < 5 %} {# IF < 4 #}
+            <p>Precio: {{ producto_mostrar.price }} (Es barato)</p>
+        {% else %}
+            <p>Precio: {{ producto_mostrar.price }} Es un precio razonable </p>
+        {% endif %}
         <p>Stock: {{ producto_mostrar.stock }}</p>
         <p>Categorias:</p>
         {% for categoria in producto_mostrar.categories.all %}

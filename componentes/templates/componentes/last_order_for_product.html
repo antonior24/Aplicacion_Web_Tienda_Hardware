@@ -2,7 +2,8 @@
     {% block cabecera %}
     <p>Número de pedido: {{ order.id }}</p>
     <p>Cliente: {{ order.customer.first_name }} {{ order.customer.last_name }}</p>
-    <p>Fecha: {{ order.created_at }}</p>
+    {# Filter time 2 #}
+    <p>Fecha: {{ order.created_at | date:"d/m/Y" }} a las {{ order.created_at | time:"H:i" }}</p>
     <p>Total: {{ order.total }} €</p>
 
     <h3>Productos en el pedido:</h3>

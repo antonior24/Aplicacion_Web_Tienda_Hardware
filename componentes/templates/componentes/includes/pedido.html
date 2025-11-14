@@ -1,10 +1,11 @@
 <h3>Pedido nº {{ pedido.id }}</h3>
     <p>Estado: {{ pedido.get_status_display }}</p>
-    <p>Fecha: {{ pedido.created_at }}</p>
+    <p>Fecha: {{ pedido.created_at | date:"d/m/Y" }}</p>
     <p>Total: {{ pedido.total }} €</p>
 
     <h4>Productos:</h4>
     {% for item in pedido.items.all %}
-        <li>{{ item.product.name }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }} €</li>
+        {# Filter length 9 #}
+        <li>{{ item.product.name }} length: {{ item.product.name|length }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }} €</li>
     {% endfor %}
     <hr>

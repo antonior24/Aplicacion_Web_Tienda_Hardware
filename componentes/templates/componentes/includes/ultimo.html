@@ -1,1 +1,2 @@
-<li>{{ item.product.name }} — Cantidad: {{ item.quantity }} — Precio: {{ item.unit_price }} €</li>
+<li>{{ item.product.name | first }} — Cantidad: {{ item.quantity }} — Precio: {{ item.unit_price }} €</li>
+{# Filter first 10 #}
