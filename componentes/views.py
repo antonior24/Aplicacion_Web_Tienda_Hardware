@@ -4,6 +4,9 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
+from componentes.forms import ProductoForm
+from django.contrib import messages
+from django.shortcuts import redirect
 
 # Create your views here.
 def home(request):
@@ -186,6 +189,31 @@ def stats_manufacturers_products(request):
         'componentes/stats_manufacturers_products.html',
         {'fabricantes': fabricantes}
     )
+
+def producto_create(request):
+    datosproducto= None
+    if request.method == 'POST':
+        datosproducto = request.POST
+        
+    formulario_p = ProductoForm(datosproducto)
+    
+    if (request.method == 'POST'):
+        formulario_creado = producto_crear(formulario_p)
+        if (formulario_creado):
+            messages.success(request, 'Producto creado correctamente.')
+            return redirect('product_list')
+    
+    return render(request, 'componentes/crear_producto.html', {'formulario_p': formulario_p})
+
+def producto_crear(formulario_p):
+    formulario_creado = False
+    if formulario_p.is_valid():
+        try:
+            formulario_p.save()
+            formulario_creado = True
+        except:
+            pass
+    return formulario_creado
     
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
