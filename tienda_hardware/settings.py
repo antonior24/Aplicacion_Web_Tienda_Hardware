@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'componentes',
     'django_seed',
+    'django_bootstrap5',
+    'django_bootstrap_icons',
 ]
 
 MIDDLEWARE = [

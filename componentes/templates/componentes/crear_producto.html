@@ -1,10 +1,14 @@
-{% extends 'base.html' %}
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
 
-{% block content %}
+
+
+{% block cabecera %}
   <h2>Crear Nuevo Producto</h2>
   <form method="post">
     {% csrf_token %}
-    {{ formulario_p.as_p }}
+   {% bootstrap_form formulario_p%}
     <button type="submit">Crear Producto</button>
   </form>
-{% endblock content %}
+{% endblock cabecera %}
