@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoForm
+from componentes.forms import ProductoForm, ManufacturerForm, CustomerForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -210,6 +210,58 @@ def producto_crear(formulario_p):
     if formulario_p.is_valid():
         try:
             formulario_p.save()
+            formulario_creado = True
+        except:
+            pass
+    return formulario_creado
+
+# Fabricante Create
+def fabricante_create(request):
+    datosfabricante= None
+    if request.method == 'POST':
+        datosfabricante = request.POST
+        
+    formulario_f = ManufacturerForm(datosfabricante)
+    
+    if (request.method == 'POST'):
+        formulario_creado = fabricante_crear(formulario_f)
+        if (formulario_creado):
+            messages.success(request, 'Fabricante creado correctamente.')
+            return redirect('manufacturers_list')
+    
+    return render(request, 'componentes/crear_fabricante.html', {'formulario_f': formulario_f})
+
+def fabricante_crear(formulario_f):
+    formulario_creado = False
+    if formulario_f.is_valid():
+        try:
+            formulario_f.save()
+            formulario_creado = True
+        except:
+            pass
+    return formulario_creado
+
+# Crear Customer Create 
+def customer_create(request):
+    datoscustomer= None
+    if request.method == 'POST':
+        datoscustomer = request.POST
+        
+    formulario_c = CustomerForm(datoscustomer)
+    
+    if (request.method == 'POST'):
+        formulario_creado = customer_crear(formulario_c)
+        if (formulario_creado):
+            messages.success(request, 'Cliente creado correctamente.')
+            return redirect('home')
+    
+    return render(request, 'componentes/crear_cliente.html', {'formulario_c': formulario_c})
+
+def customer_crear(formulario_c):
+    formulario_creado = False
+    if formulario_c.is_valid():
+        try:
+            formulario_c.save()
             formulario_creado = True
         except:
             pass
