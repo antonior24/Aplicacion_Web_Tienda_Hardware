@@ -26,3 +26,11 @@ class CustomerForm(forms.ModelForm):
         widgets = {
             'wishlist': forms.CheckboxSelectMultiple(), 
         }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name', 'slug', 'description', 'parent']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }
