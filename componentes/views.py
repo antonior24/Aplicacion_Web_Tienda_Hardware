@@ -291,6 +291,11 @@ def category_crear(formulario_cat):
         except:
             pass
     return formulario_creado
+
+#validaciones
+
+
+    
     
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
