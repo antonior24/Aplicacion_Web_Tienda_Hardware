@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoForm, ManufacturerForm, CustomerForm, CategoryForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -292,11 +292,26 @@ def category_crear(formulario_cat):
             pass
     return formulario_creado
 
-#validaciones
-
-
+#READ de productos
+def producto_buscar(request):
+    formulario_buscar = ProductoBuscarForm(request.GET)
     
-    
+    if formulario_buscar.is_valid():
+        texto_busqueda = formulario_buscar.cleaned_data.get('textoBusqueda')
+        #productos_encontrados = Product.objects.filter(
+        #    Q(name__icontains=texto_busqueda) | Q(description__icontains=texto_busqueda)
+        #).select_related("manufacturer").prefetch_related("categories").all()
+        productos_encontrados = Product.objects.select_related("manufacturer").prefetch_related("categories")
+        productos_encontrados = productos_encontrados.filter(Q(name__icontains=texto_busqueda) | Q(description__icontains=texto_busqueda)).all()
+        return render(request, 'componentes/producto_busqueda.html', {
+            'productos_mostrar': productos_encontrados,
+            'texto_buscar': texto_busqueda
+        })
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect('home')
+
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
 

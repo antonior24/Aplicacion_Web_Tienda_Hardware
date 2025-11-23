@@ -47,3 +47,7 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
         }
+        
+#READ
+class ProductoBuscarForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)

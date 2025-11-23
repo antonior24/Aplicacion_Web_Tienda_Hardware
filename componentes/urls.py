@@ -17,9 +17,12 @@ urlpatterns = [
     path('orders/last-for-product/<int:product_id>/', views.last_order_for_product, name='last_order_for_product'),
     path('products/never-ordered/', views.products_never_ordered, name='products_never_ordered'),
     path('stats/manufacturers/products-count/', views.stats_manufacturers_products, name='stats_manufacturers_products'),
-    #CRUD
+    #CRUD CREATE
     path('product/create/', views.producto_create, name='producto_create'),
     path('manufacturer/create/', views.fabricante_create, name='fabricante_create'),
     path('customer/create/', views.customer_create, name='cliente_create'),
     path('category/create/', views.category_create, name='category_create'),
+    
+    #CRUD READ
+    path('product/buscar/', views.producto_buscar, name='producto_buscar'),
 ]
