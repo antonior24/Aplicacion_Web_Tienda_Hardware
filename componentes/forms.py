@@ -93,8 +93,8 @@ class ProductoBusquedaAvanzadaForm(forms.Form):
             self.add_error('manufacturer', "")
             self.add_error('categories', "")
         else:
-            if textoBusqueda != '' and len(description) < 3:
-                self.add_error('textoBusqueda', "La descripcion debe tener al menos 3 caracteres.")
+            #if textoBusqueda != '' and len(description) < 3:
+             #   self.add_error('textoBusqueda', "La descripcion debe tener al menos 3 caracteres.")
             if not price is None and price <= 0:
                 self.add_error('price', "El precio debe ser mayor que 0.")
                 
