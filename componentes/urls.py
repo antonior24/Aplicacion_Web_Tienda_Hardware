@@ -25,4 +25,7 @@ urlpatterns = [
     
     #CRUD READ
     path('product/buscar/', views.producto_buscar, name='producto_buscar'),
+    
+    #CRUD READ avanzado
+    path('product/busqueda_avanzada/', views.producto_busqueda_avanzada, name='producto_busqueda_avanzada'),
 ]

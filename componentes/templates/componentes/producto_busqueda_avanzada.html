@@ -1,0 +1,14 @@
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+
+
+
+{% block cabecera %}
+  <h2>Crear Nuevo Producto</h2>
+  <form method="post">
+    {% csrf_token %}
+   {% bootstrap_form formulario_busqueda_avanzada%}
+    <button type="submit">Crear Producto</button>
+  </form>
+{% endblock cabecera %}

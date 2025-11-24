@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -311,6 +311,67 @@ def producto_buscar(request):
         return redirect(request.META["HTTP_REFERER"])
     else:
         return redirect('home')
+    
+#READ avanzado de productos
+def producto_busqueda_avanzada(request):
+    QSproductos = Product.objects.select_related("manufacturer").prefetch_related("categories")
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = ProductoBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            textoBusqueda = formulario_busqueda_avanzada.cleaned_data.get('textoBusqueda')
+            sku = formulario_busqueda_avanzada.cleaned_data.get('sku')
+            name = formulario_busqueda_avanzada.cleaned_data.get('name')
+            description = formulario_busqueda_avanzada.cleaned_data.get('description')
+            price = formulario_busqueda_avanzada.cleaned_data.get('price')
+            stock = formulario_busqueda_avanzada.cleaned_data.get('stock')
+            manufacturer = formulario_busqueda_avanzada.cleaned_data.get('manufacturer')
+            categories = formulario_busqueda_avanzada.cleaned_data.get('categories')  
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if textoBusqueda != '':
+                QSproductos = QSproductos.filter(
+                    Q(name__icontains=textoBusqueda) | Q(description__icontains=textoBusqueda)
+                )
+                mensaje_busqueda += f"- Texto búsqueda: {textoBusqueda}\n"
+            if sku != '':
+                QSproductos = QSproductos.filter(sku__icontains=sku)
+                mensaje_busqueda += f"- SKU: {sku}\n"
+            if name != '':
+                QSproductos = QSproductos.filter(name__icontains=name)
+                mensaje_busqueda += f"- Name: {name}\n"
+            if description != '':
+                QSproductos = QSproductos.filter(description__icontains=description)
+                mensaje_busqueda += f"- Description: {description}\n"
+            if price is not None:
+                QSproductos = QSproductos.filter(price=price)
+                mensaje_busqueda += f"- Price: {price}\n"
+            if stock is not None:
+                QSproductos = QSproductos.filter(stock=stock)
+                mensaje_busqueda += f"- Stock: {stock}\n"
+            if manufacturer is not None:
+                QSproductos = QSproductos.filter(manufacturer=manufacturer)
+                mensaje_busqueda += f"- Manufacturer: {manufacturer.name}\n"
+            if categories.count() > 0:
+                for categoria in categories:
+                    QSproductos = QSproductos.filter(categories=categoria)
+                    mensaje_busqueda += f"- Category: {categoria.name}\n"
+            productos_encontrados = QSproductos.all()
+            
+            return render(request, 'componentes/producto_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'productos_mostrar': productos_encontrados,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            productos_encontrados = QSproductos.all()
+    else:
+        productos_encontrados = QSproductos.all()
+        formulario_busqueda_avanzada = ProductoBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/producto_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'productos_mostrar': productos_encontrados,
+    })
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
