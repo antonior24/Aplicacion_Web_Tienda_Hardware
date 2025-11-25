@@ -13,3 +13,11 @@ window.onload = function() {
         localStorage.setItem("accesoPermitido", "true");
     }
 }
+
+function eliminar() {
+    var x = confirm("¿Está seguro de que desea eliminar este producto?");
+    if (x)
+        return true;
+    else
+        return false;
+}

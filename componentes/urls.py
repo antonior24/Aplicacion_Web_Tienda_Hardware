@@ -28,4 +28,8 @@ urlpatterns = [
     
     #CRUD READ avanzado
     path('product/busqueda_avanzada/', views.producto_busqueda_avanzada, name='producto_busqueda_avanzada'),
+    #CRUD UPDATE
+    path('product/update/<int:product_id>/', views.producto_update, name='producto_update'),
+    #CRUD DELETE
+    path('product/delete/<int:product_id>/', views.producto_delete, name='producto_delete'),
 ]

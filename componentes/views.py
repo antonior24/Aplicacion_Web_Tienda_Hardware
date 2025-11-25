@@ -373,6 +373,37 @@ def producto_busqueda_avanzada(request):
         'productos_mostrar': productos_encontrados,
     })
 
+#UPDATE 
+def producto_update(request, product_id):
+    producto = Product.objects.get(id=product_id)
+    datosproducto= None
+    if request.method == 'POST':
+        datosproducto = request.POST
+        
+    formulario_p = ProductoForm(datosproducto, instance=producto)
+    
+    if (request.method == 'POST'):
+        if formulario_p.is_valid():
+            try:
+                formulario_p.save()
+                messages.success(request, 'Producto actualizado correctamente.')
+                return redirect('product_list')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_producto.html', {'formulario_p': formulario_p, 'producto': producto})
+
+#CRUD DELETE
+def producto_delete(request, product_id):
+    producto = Product.objects.get(id=product_id)
+    
+    try:
+        producto.delete()
+        messages.success(request, 'Producto eliminado correctamente.')
+        return redirect('product_list')
+    except Exception as e:
+        pass
+    return redirect('product_detail')
+
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
 
