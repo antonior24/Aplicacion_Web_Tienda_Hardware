@@ -22,14 +22,18 @@ urlpatterns = [
     path('manufacturer/create/', views.fabricante_create, name='fabricante_create'),
     path('customer/create/', views.customer_create, name='cliente_create'),
     path('category/create/', views.category_create, name='category_create'),
+    path('order/create/', views.order_create, name='order_create'),
     
     #CRUD READ
     path('product/buscar/', views.producto_buscar, name='producto_buscar'),
     
     #CRUD READ avanzado
     path('product/busqueda_avanzada/', views.producto_busqueda_avanzada, name='producto_busqueda_avanzada'),
+    path('manufacturer/busqueda_avanzada/', views.fabricante_busqueda_avanzada, name='fabricante_busqueda_avanzada'),
     #CRUD UPDATE
     path('product/update/<int:product_id>/', views.producto_update, name='producto_update'),
+    path('manufacturer/update/<int:manufacturer_id>/', views.fabricante_update, name='fabricante_update'),
     #CRUD DELETE
     path('product/delete/<int:product_id>/', views.producto_delete, name='producto_delete'),
+    path('manufacturer/delete/<int:manufacturer_id>/', views.fabricante_delete, name='fabricante_delete'),
 ]

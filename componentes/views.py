@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -292,6 +292,31 @@ def category_crear(formulario_cat):
             pass
     return formulario_creado
 
+#CRUD CREATE Order
+def order_create(request):
+    datosorder= None
+    if request.method == 'POST':
+        datosorder = request.POST
+        
+    formulario_o = OrderForm(datosorder)
+    
+    if (request.method == 'POST'):
+        formulario_creado = order_crear(formulario_o)
+        if (formulario_creado):
+            messages.success(request, 'Pedido creado correctamente.')
+            return redirect('home')
+    
+    return render(request, 'componentes/crear_pedido.html', {'formulario_o': formulario_o})
+def order_crear(formulario_o):
+    formulario_creado = False
+    if formulario_o.is_valid():
+        try:
+            formulario_o.save()
+            formulario_creado = True
+        except:
+            pass
+    return formulario_creado
+
 #READ de productos
 def producto_buscar(request):
     formulario_buscar = ProductoBuscarForm(request.GET)
@@ -373,6 +398,49 @@ def producto_busqueda_avanzada(request):
         'productos_mostrar': productos_encontrados,
     })
 
+#READ avanzado de fabricantes
+def fabricante_busqueda_avanzada(request):
+    QSfabricantes = Manufacturer.objects.all()
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = FabricanteBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            name = formulario_busqueda_avanzada.cleaned_data.get('name')
+            website = formulario_busqueda_avanzada.cleaned_data.get('website')
+            established = formulario_busqueda_avanzada.cleaned_data.get('established')
+            active = formulario_busqueda_avanzada.cleaned_data.get('active')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if name != '':
+                QSfabricantes = QSfabricantes.filter(name__icontains=name)
+                mensaje_busqueda += f"- Name: {name}\n"
+            if established is not None:
+                QSfabricantes = QSfabricantes.filter(established=established)
+                mensaje_busqueda += f"- Established: {established}\n"
+            if active is not None:
+                QSfabricantes = QSfabricantes.filter(active=active)
+                mensaje_busqueda += f"- Active: {active}\n"
+            if website != '':
+                QSfabricantes = QSfabricantes.filter(website__icontains=website)
+                mensaje_busqueda += f"- Website: {website}\n"
+            fabricantes_encontrados = QSfabricantes.all()
+            
+            return render(request, 'componentes/fabricante_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'fabricantes_mostrar': fabricantes_encontrados,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            fabricantes_encontrados = QSfabricantes.all()
+    else:
+        fabricantes_encontrados = QSfabricantes.all()
+        formulario_busqueda_avanzada = FabricanteBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/fabricante_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'fabricantes_mostrar': fabricantes_encontrados,
+    })
+
 #UPDATE 
 def producto_update(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -392,6 +460,25 @@ def producto_update(request, product_id):
                 pass  
     return render(request, 'componentes/actualizar_producto.html', {'formulario_p': formulario_p, 'producto': producto})
 
+#UPDATE Fabricante
+def fabricante_update(request, manufacturer_id):
+    fabricante = Manufacturer.objects.get(id=manufacturer_id)
+    datosfabricante= None
+    if request.method == 'POST':
+        datosfabricante = request.POST
+        
+    formulario_f = ManufacturerForm(datosfabricante, instance=fabricante)
+    
+    if (request.method == 'POST'):
+        if formulario_f.is_valid():
+            try:
+                formulario_f.save()
+                messages.success(request, 'Fabricante actualizado correctamente.')
+                return redirect('manufacturers_list')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_fabricante.html', {'formulario_f': formulario_f, 'fabricante': fabricante})
+
 #CRUD DELETE
 def producto_delete(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -403,6 +490,18 @@ def producto_delete(request, product_id):
     except Exception as e:
         pass
     return redirect('product_detail')
+
+#CRUD DELETE Fabricante
+def fabricante_delete(request, manufacturer_id):
+    fabricante = Manufacturer.objects.get(id=manufacturer_id)
+    
+    try:
+        fabricante.delete()
+        messages.success(request, 'Fabricante eliminado correctamente.')
+        return redirect('manufacturers_list')
+    except Exception as e:
+        pass
+    return redirect('manufacturers_list')
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

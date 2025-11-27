@@ -16,4 +16,21 @@
         <p><strong>¡Fabricante destacado!</strong></p>
     {% endif %}
 </div>
+
+{% load bootstrap_icons %}
+        <div class="mb-2">
+            <button type="button" 
+                    class="btn btn-outline-primary"> 
+                    <a href="{% url 'fabricante_update' manufacturers.id %}"><span>{% bs_icon 'pencil' %}</span></a>
+                    
+            </button>
+        </div>
+        <div class="mb-2"> 
+            <form action = "{% url 'fabricante_delete' manufacturers.id %}" method = "post"> 
+                {% csrf_token %}
+                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                    <span>{% bs_icon 'trash' %}</span>
+                </button> 
+            </form>
+        </div> 
 {% endif %}

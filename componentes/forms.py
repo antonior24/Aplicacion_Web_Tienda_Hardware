@@ -1,6 +1,7 @@
 from django import forms
-from .models import Product, Manufacturer, Category, Customer
+from .models import Product, Manufacturer, Category, Customer, Order, ShipmentDetail
 
+#CRUD CREATE
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Product
@@ -47,6 +48,25 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
         }
+
+#quinto CREATE
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['customer', 'status', 'total', 'products']
+        widgets = {
+            'products': forms.CheckboxSelectMultiple(),
+            'total': forms.NumberInput(attrs={'step': '0.01'}),  # Para decimales
+        }
+        def clean(self):
+            cleaned_data = super().clean()
+            customer = cleaned_data.get('customer')
+            total = cleaned_data.get('total')
+            if total < 0:
+                self.add_error('total', "El total no puede ser negativo.")
+            if customer is None:
+                self.add_error('customer', "El cliente es obligatorio.")
+            return cleaned_data
         
 #READ
 class ProductoBuscarForm(forms.Form):
@@ -100,3 +120,33 @@ class ProductoBusquedaAvanzadaForm(forms.Form):
                 
         # Retornamos los datos limpiados
         return self.cleaned_data
+
+# READ avanzado de fabricantes
+class FabricanteBusquedaAvanzadaForm(forms.Form):
+    name = forms.CharField(required=False)
+    established = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    active = forms.NullBooleanField(required=False, widget=forms.Select(choices=[('', '---------'), ('True', 'Sí'), ('False', 'No')]))
+    website = forms.URLField(required=False)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        website = cleaned_data.get('website')
+        established = cleaned_data.get('established')
+        active = cleaned_data.get('active')
+        
+        if (name == '' 
+            and established is None
+            and active is None):
+            self.add_error('name', "Debe rellenar al menos un campo para la búsqueda avanzada.")
+            self.add_error('established', "")
+            self.add_error('active', "")
+            self.add_error('website', "")
+        else:
+            if name and len(name) < 3:
+                self.add_error('name', "El nombre debe tener al menos 3 caracteres.")
+            
+            if website and not (website.startswith('http://') or website.startswith('https://')):
+                self.add_error('website', "La URL del sitio web debe comenzar con http:// o https://")
+        
+        return cleaned_data
