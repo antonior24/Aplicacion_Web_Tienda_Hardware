@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -439,6 +439,45 @@ def fabricante_busqueda_avanzada(request):
     return render(request, 'componentes/fabricante_busqueda_avanzada.html', {
         'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
         'fabricantes_mostrar': fabricantes_encontrados,
+    })
+
+#READ avanzado de clientes
+def cliente_busqueda_avanzada(request):
+    QScustomers = Customer.objects.all()
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = ClienteBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            first_name = formulario_busqueda_avanzada.cleaned_data.get('first_name')
+            last_name = formulario_busqueda_avanzada.cleaned_data.get('last_name')
+            email = formulario_busqueda_avanzada.cleaned_data.get('email')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if first_name != '':
+                QScustomers = QScustomers.filter(first_name__icontains=first_name)
+                mensaje_busqueda += f"- First Name: {first_name}\n"
+            if last_name != '':
+                QScustomers = QScustomers.filter(last_name__icontains=last_name)
+                mensaje_busqueda += f"- Last Name: {last_name}\n"
+            if email != '':
+                QScustomers = QScustomers.filter(email__icontains=email)
+                mensaje_busqueda += f"- Email: {email}\n"
+            customers_encontrados = QScustomers.all()
+            
+            return render(request, 'componentes/cliente_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'clientes': customers_encontrados,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            customers_encontrados = QScustomers.all()
+    else:
+        customers_encontrados = QScustomers.all()
+        formulario_busqueda_avanzada = ClienteBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/cliente_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'clientes': customers_encontrados,
     })
 
 #UPDATE 

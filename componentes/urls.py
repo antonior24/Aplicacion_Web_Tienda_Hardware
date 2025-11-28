@@ -30,6 +30,7 @@ urlpatterns = [
     #CRUD READ avanzado
     path('product/busqueda_avanzada/', views.producto_busqueda_avanzada, name='producto_busqueda_avanzada'),
     path('manufacturer/busqueda_avanzada/', views.fabricante_busqueda_avanzada, name='fabricante_busqueda_avanzada'),
+    path('customer/busqueda_avanzada/', views.cliente_busqueda_avanzada, name='cliente_busqueda_avanzada'),
     #CRUD UPDATE
     path('product/update/<int:product_id>/', views.producto_update, name='producto_update'),
     path('manufacturer/update/<int:manufacturer_id>/', views.fabricante_update, name='fabricante_update'),

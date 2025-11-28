@@ -1,0 +1,8 @@
+{% extends "./home.html" %}
+    {% block busqueda %}
+    {% endblock %}
+    {% block cabecera %}
+        {% for cliente in clientes %}
+            {% include "componentes/includes/customers.html" %} {# Template tag include 3 #}
+        {% endfor %}
+    {% endblock cabecera %}

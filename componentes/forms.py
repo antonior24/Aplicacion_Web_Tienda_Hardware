@@ -150,3 +150,32 @@ class FabricanteBusquedaAvanzadaForm(forms.Form):
                 self.add_error('website', "La URL del sitio web debe comenzar con http:// o https://")
         
         return cleaned_data
+# READ avanzado de clientes
+class ClienteBusquedaAvanzadaForm(forms.Form):
+    first_name = forms.CharField(required=False)
+    last_name = forms.CharField(required=False)
+    email = forms.EmailField(required=False)
+    phone = forms.CharField(required=False)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        email = cleaned_data.get('email')
+        phone = cleaned_data.get('phone')
+        
+        if (first_name == '' 
+            and last_name == ''
+            and email == ''
+            and phone == ''):
+            self.add_error('first_name', "Debe rellenar al menos un campo para la búsqueda avanzada.")
+            self.add_error('last_name', "")
+            self.add_error('email', "")
+            self.add_error('phone', "")
+        else:
+            if first_name and len(first_name) < 2:
+                self.add_error('first_name', "El nombre debe tener al menos 2 caracteres.")
+            if last_name and len(last_name) < 2:
+                self.add_error('last_name', "El apellido debe tener al menos 2 caracteres.")
+        
+        return cleaned_data
