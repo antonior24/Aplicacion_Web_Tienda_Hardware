@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -538,6 +538,50 @@ def categoria_busqueda_avanzada(request):
         'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
         'categorias': categorias_encontradas,
     })
+    
+#CRUD READ avanzado de pedidos
+def pedido_busqueda_avanzada(request):
+    QSorders = Order.objects.all()
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
+            status = formulario_busqueda_avanzada.cleaned_data.get('status')
+            total = formulario_busqueda_avanzada.cleaned_data.get('total')
+            products = formulario_busqueda_avanzada.cleaned_data.get('products')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if customer is not None:
+                QSorders = QSorders.filter(customer=customer)
+                mensaje_busqueda += f"- Customer: {customer.first_name} {customer.last_name}\n"
+            if status != '':
+                QSorders = QSorders.filter(status__icontains=status)
+                mensaje_busqueda += f"- Status: {status}\n"
+            if total is not None:
+                QSorders = QSorders.filter(total=total)
+                mensaje_busqueda += f"- Total: {total}\n"
+            if products.count() > 0:
+                for producto in products:
+                    QSorders = QSorders.filter(products=producto)
+                    mensaje_busqueda += f"- Product: {producto.name}\n"
+            orders_encontrados = QSorders.all()
+            
+            return render(request, 'componentes/pedido_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'pedidos': orders_encontrados,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            orders_encontrados = QSorders.all()
+    else:
+        orders_encontrados = QSorders.all()
+        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/pedido_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'pedidos': orders_encontrados,
+    })
 
 #UPDATE 
 def producto_update(request, product_id):
@@ -615,6 +659,25 @@ def categoria_update(request, category_id):
                 pass  
     return render(request, 'componentes/actualizar_categoria.html', {'formulario_cat': formulario_cat, 'categoria': categoria})
 
+#UPDATE Order
+def pedido_update(request, order_id):
+    pedido = Order.objects.get(id=order_id)
+    datospedido= None
+    if request.method == 'POST':
+        datospedido = request.POST
+        
+    formulario_o = OrderForm(datospedido, instance=pedido)
+    
+    if (request.method == 'POST'):
+        if formulario_o.is_valid():
+            try:
+                formulario_o.save()
+                messages.success(request, 'Pedido actualizado correctamente.')
+                return redirect('home')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_pedido.html', {'formulario_o': formulario_o, 'pedido': pedido})
+
 #CRUD DELETE
 def producto_delete(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -662,6 +725,18 @@ def categoria_delete(request, category_id):
     except Exception as e:
         pass
     return redirect('category_list')
+
+#delete Order
+def pedido_delete(request, order_id):
+    pedido = Order.objects.get(id=order_id)
+    
+    try:
+        pedido.delete()
+        messages.success(request, 'Pedido eliminado correctamente.')
+        return redirect('home')
+    except Exception as e:
+        pass
+    return redirect('home')
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

@@ -205,3 +205,32 @@ class CategoriaBusquedaAvanzadaForm(forms.Form):
                 self.add_error('slug', "El slug debe tener al menos 3 caracteres.")
         
         return cleaned_data
+
+#Busqueda avanzada de pedidos
+class PedidoBusquedaAvanzadaForm(forms.Form):
+    customer = forms.ModelChoiceField(queryset=Customer.objects.all(), required=False)
+    status = forms.ChoiceField(choices=[('', '---------')] + list(Order.STATUS_CHOICES), required=False)
+    total = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    products = forms.ModelMultipleChoiceField(queryset=Product.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        customer = cleaned_data.get('customer')
+        status = cleaned_data.get('status')
+        total = cleaned_data.get('total')
+        products = cleaned_data.get('products')
+        
+        if (customer is None
+            and status == ''
+            and total is None
+            and products.count() == 0):
+            self.add_error('customer', "Debe rellenar al menos un campo para la búsqueda avanzada.")
+            self.add_error('status', "")
+            self.add_error('total_min', "")
+            self.add_error('total_max', "")
+            self.add_error('products', "")
+        else:
+            if not total is None and total < 0:
+                self.add_error('total', "El total no puede ser negativo.")
+        
+        return cleaned_data

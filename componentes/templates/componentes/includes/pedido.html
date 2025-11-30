@@ -8,4 +8,22 @@
         {# Filter length 9 #}
         <li>{{ item.product.name }} length: {{ item.product.name|length }} - Cantidad: {{ item.quantity }} - Precio: {{ item.unit_price }} €</li>
     {% endfor %}
+
+    {% load bootstrap_icons %}
+        <div class="mb-2">
+            <button type="button" 
+                    class="btn btn-outline-primary"> 
+                    {# <a href="{% url 'libro_editar' libro.id %}" ><span>{% bs_icon 'pencil' %}</span></a> hacer esto adaptado a Actualizar producto #}
+                    <a href="{% url 'pedido_update' pedido.id %}"><span>{% bs_icon 'pencil' %}</span></a>
+                    
+            </button>
+        </div>
+        <div class="mb-2">
+            <form action = "{% url 'pedido_delete' pedido.id %}" method = "post"> 
+                {% csrf_token %}
+                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                    <span>{% bs_icon 'trash' %}</span>
+                </button> 
+            </form>
+        </div>
     <hr>
