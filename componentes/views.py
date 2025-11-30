@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -34,6 +34,16 @@ def customer_list(request):
     clientes = Customer.objects.order_by("last_name", "first_name")
     clientes = clientes.all()
     return render(request, 'componentes/customer_list.html', {"clientes": clientes})
+
+def category_list(request):
+    """
+    SQL (aprox):
+    -- SELECT * FROM componentes_category
+    -- ORDER BY name ASC;
+    """
+    categorias = Category.objects.order_by("name")
+    categorias = categorias.all()
+    return render(request, 'componentes/category_list.html', {"categorias": categorias})
 
 def manufacturers_list(request):
     """
@@ -488,6 +498,45 @@ def cliente_busqueda_avanzada(request):
     return render(request, 'componentes/cliente_busqueda_avanzada.html', {
         'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
         'clientes': customers_encontrados,
+    })
+
+#READ avanzado de categorias
+def categoria_busqueda_avanzada(request):
+    QScategories = Category.objects.all()
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = CategoriaBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            name = formulario_busqueda_avanzada.cleaned_data.get('name')
+            slug = formulario_busqueda_avanzada.cleaned_data.get('slug')
+            description = formulario_busqueda_avanzada.cleaned_data.get('description')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if name != '':
+                QScategories = QScategories.filter(name__icontains=name)
+                mensaje_busqueda += f"- Name: {name}\n"
+            if slug != '':
+                QScategories = QScategories.filter(slug__icontains=slug)
+                mensaje_busqueda += f"- Slug: {slug}\n"
+            if description != '':
+                QScategories = QScategories.filter(description__icontains=description)
+                mensaje_busqueda += f"- Description: {description}\n"
+            categorias_encontradas = QScategories.all()
+            
+            return render(request, 'componentes/categoria_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'categorias': categorias_encontradas,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            categorias_encontradas = QScategories.all()
+    else:
+        categorias_encontradas = QScategories.all()
+        formulario_busqueda_avanzada = CategoriaBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/categoria_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'categorias': categorias_encontradas,
     })
 
 #UPDATE 
