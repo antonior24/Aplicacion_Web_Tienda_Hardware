@@ -179,3 +179,29 @@ class ClienteBusquedaAvanzadaForm(forms.Form):
                 self.add_error('last_name', "El apellido debe tener al menos 2 caracteres.")
         
         return cleaned_data
+    
+#READ avanzado de categorias
+class CategoriaBusquedaAvanzadaForm(forms.Form):
+    name = forms.CharField(required=False)
+    slug = forms.CharField(required=False)
+    description = forms.CharField(required=False)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        slug = cleaned_data.get('slug')
+        description = cleaned_data.get('description')
+        
+        if (name == '' 
+            and slug == ''
+            and description == ''):
+            self.add_error('name', "Debe rellenar al menos un campo para la búsqueda avanzada.")
+            self.add_error('slug', "")
+            self.add_error('description', "")
+        else:
+            if name and len(name) < 3:
+                self.add_error('name', "El nombre debe tener al menos 3 caracteres.")
+            if slug and len(slug) < 3:
+                self.add_error('slug', "El slug debe tener al menos 3 caracteres.")
+        
+        return cleaned_data

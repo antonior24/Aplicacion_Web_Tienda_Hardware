@@ -25,6 +25,16 @@ def product_list(request):
     productos = productos.all()
     return render(request, 'componentes/product_list.html', {"productos_mostrar": productos})
 
+def customer_list(request):
+    """
+    SQL (aprox):
+    -- SELECT * FROM componentes_customer
+    -- ORDER BY last_name ASC, first_name ASC;
+    """
+    clientes = Customer.objects.order_by("last_name", "first_name")
+    clientes = clientes.all()
+    return render(request, 'componentes/customer_list.html', {"clientes": clientes})
+
 def manufacturers_list(request):
     """
     SQL (aprox):
@@ -253,7 +263,7 @@ def customer_create(request):
         formulario_creado = customer_crear(formulario_c)
         if (formulario_creado):
             messages.success(request, 'Cliente creado correctamente.')
-            return redirect('home')
+            return redirect('customer_list')
     
     return render(request, 'componentes/crear_cliente.html', {'formulario_c': formulario_c})
 
@@ -278,7 +288,7 @@ def category_create(request):
         formulario_creado = customer_crear(formulario_cat)
         if (formulario_creado):
             messages.success(request, 'Categoria creada correctamente.')
-            return redirect('home')
+            return redirect('customers_list')
     
     return render(request, 'componentes/crear_categoria.html', {'formulario_cat': formulario_cat})
 
@@ -518,6 +528,25 @@ def fabricante_update(request, manufacturer_id):
                 pass  
     return render(request, 'componentes/actualizar_fabricante.html', {'formulario_f': formulario_f, 'fabricante': fabricante})
 
+#Cliente UPDATE
+def cliente_update(request, customer_id):
+    cliente = Customer.objects.get(id=customer_id)
+    datoscustomer= None
+    if request.method == 'POST':
+        datoscustomer = request.POST
+        
+    formulario_c = CustomerForm(datoscustomer, instance=cliente)
+    
+    if (request.method == 'POST'):
+        if formulario_c.is_valid():
+            try:
+                formulario_c.save()
+                messages.success(request, 'Cliente actualizado correctamente.')
+                return redirect('customer_list')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_cliente.html', {'formulario_c': formulario_c, 'cliente': cliente})
+
 #CRUD DELETE
 def producto_delete(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -541,6 +570,8 @@ def fabricante_delete(request, manufacturer_id):
     except Exception as e:
         pass
     return redirect('manufacturers_list')
+
+#CRUD DELETE Cliente
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

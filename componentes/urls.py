@@ -17,6 +17,7 @@ urlpatterns = [
     path('orders/last-for-product/<int:product_id>/', views.last_order_for_product, name='last_order_for_product'),
     path('products/never-ordered/', views.products_never_ordered, name='products_never_ordered'),
     path('stats/manufacturers/products-count/', views.stats_manufacturers_products, name='stats_manufacturers_products'),
+    path('customers/', views.customer_list, name='customer_list'),
     #CRUD CREATE
     path('product/create/', views.producto_create, name='producto_create'),
     path('manufacturer/create/', views.fabricante_create, name='fabricante_create'),
@@ -34,7 +35,9 @@ urlpatterns = [
     #CRUD UPDATE
     path('product/update/<int:product_id>/', views.producto_update, name='producto_update'),
     path('manufacturer/update/<int:manufacturer_id>/', views.fabricante_update, name='fabricante_update'),
+    path('customer/update/<int:customer_id>/', views.cliente_update, name='cliente_update'),
     #CRUD DELETE
     path('product/delete/<int:product_id>/', views.producto_delete, name='producto_delete'),
     path('manufacturer/delete/<int:manufacturer_id>/', views.fabricante_delete, name='fabricante_delete'),
+    path('customer/delete/<int:customer_id>/', views.cliente_delete, name='cliente_delete'),
 ]

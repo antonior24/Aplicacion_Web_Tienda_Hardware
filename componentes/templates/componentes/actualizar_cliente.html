@@ -1,0 +1,14 @@
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+
+
+
+{% block cabecera %}
+  <h2>Actualizar Cliente</h2>
+  <form action = "{% url 'cliente_update' cliente.id %}" method = "post"> 
+    {% csrf_token %}
+   {% bootstrap_form formulario_c %}
+    <button type="submit">Actualizar Cliente</button>
+  </form>
+{% endblock cabecera %}
