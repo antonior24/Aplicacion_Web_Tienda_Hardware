@@ -298,7 +298,7 @@ def category_create(request):
         formulario_creado = customer_crear(formulario_cat)
         if (formulario_creado):
             messages.success(request, 'Categoria creada correctamente.')
-            return redirect('customers_list')
+            return redirect('category_list')
     
     return render(request, 'componentes/crear_categoria.html', {'formulario_cat': formulario_cat})
 
@@ -596,6 +596,25 @@ def cliente_update(request, customer_id):
                 pass  
     return render(request, 'componentes/actualizar_cliente.html', {'formulario_c': formulario_c, 'cliente': cliente})
 
+#UPDATE Categoria
+def categoria_update(request, category_id):
+    categoria = Category.objects.get(id=category_id)
+    datoscategoria= None
+    if request.method == 'POST':
+        datoscategoria = request.POST
+        
+    formulario_cat = CategoryForm(datoscategoria, instance=categoria)
+    
+    if (request.method == 'POST'):
+        if formulario_cat.is_valid():
+            try:
+                formulario_cat.save()
+                messages.success(request, 'Categoria actualizada correctamente.')
+                return redirect('category_list')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_categoria.html', {'formulario_cat': formulario_cat, 'categoria': categoria})
+
 #CRUD DELETE
 def producto_delete(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -631,6 +650,18 @@ def cliente_delete(request, customer_id):
     except Exception as e:
         pass
     return redirect('customer_list')
+
+#CRUD DELETE Categoria
+def categoria_delete(request, category_id):
+    categoria = Category.objects.get(id=category_id)
+    
+    try:
+        categoria.delete()
+        messages.success(request, 'Categoria eliminada correctamente.')
+        return redirect('category_list')
+    except Exception as e:
+        pass
+    return redirect('category_list')
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

@@ -38,8 +38,10 @@ urlpatterns = [
     path('product/update/<int:product_id>/', views.producto_update, name='producto_update'),
     path('manufacturer/update/<int:manufacturer_id>/', views.fabricante_update, name='fabricante_update'),
     path('customer/update/<int:customer_id>/', views.cliente_update, name='cliente_update'),
+    path('category/update/<int:category_id>/', views.categoria_update, name='categoria_update'),
     #CRUD DELETE
     path('product/delete/<int:product_id>/', views.producto_delete, name='producto_delete'),
     path('manufacturer/delete/<int:manufacturer_id>/', views.fabricante_delete, name='fabricante_delete'),
     path('customer/delete/<int:customer_id>/', views.cliente_delete, name='cliente_delete'),
+    path('category/delete/<int:category_id>/', views.categoria_delete, name='categoria_delete'),
 ]

@@ -1,0 +1,14 @@
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+
+
+
+{% block cabecera %}
+  <h2>Actualizar Categoria</h2>
+  <form action = "{% url 'categoria_update' categoria.id %}" method = "post"> 
+    {% csrf_token %}
+   {% bootstrap_form formulario_cat %}
+    <button type="submit">Actualizar Categoria</button>
+  </form>
+{% endblock cabecera %}
