@@ -572,6 +572,16 @@ def fabricante_delete(request, manufacturer_id):
     return redirect('manufacturers_list')
 
 #CRUD DELETE Cliente
+def cliente_delete(request, customer_id):
+    cliente = Customer.objects.get(id=customer_id)
+    
+    try:
+        cliente.delete()
+        messages.success(request, 'Cliente eliminado correctamente.')
+        return redirect('customer_list')
+    except Exception as e:
+        pass
+    return redirect('customer_list')
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
