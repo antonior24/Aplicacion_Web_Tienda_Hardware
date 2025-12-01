@@ -1,0 +1,14 @@
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+
+
+
+{% block cabecera %}
+  <h2>Actualizar Perfil</h2>
+  <form action = "{% url 'perfil_update' perfil.id %}" method = "post"> 
+    {% csrf_token %}
+   {% bootstrap_form formulario_p%}
+    <button type="submit">Actualizar Perfil</button>
+  </form>
+{% endblock cabecera %}

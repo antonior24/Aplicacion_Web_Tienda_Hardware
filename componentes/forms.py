@@ -74,7 +74,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['customer', 'birth_date', 'newsletter', 'notes']
         widgets = {
-            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+            'birth_date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'notes': forms.Textarea(attrs={'rows': 3}), 
         }
         def clean(self):
@@ -247,5 +247,29 @@ class PedidoBusquedaAvanzadaForm(forms.Form):
         else:
             if not total is None and total < 0:
                 self.add_error('total', "El total no puede ser negativo.")
+        
+        return cleaned_data
+    
+#Busqueda avancada de perfiles
+class PerfilBusquedaAvanzadaForm(forms.Form):
+    customer = forms.ModelChoiceField(queryset=Customer.objects.all(), required=False)
+    birth_date = forms.DateField(required=False, widget=forms.DateInput(attrs={'type': 'date'}))
+    newsletter = forms.NullBooleanField(required=False, widget=forms.Select(choices=[('', '---------'), ('True', 'Sí'), ('False', 'No')]))
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        customer = cleaned_data.get('customer')
+        birth_date = cleaned_data.get('birth_date')
+        newsletter = cleaned_data.get('newsletter')
+        
+        if (customer is None
+            and birth_date is None
+            and newsletter is None):
+            self.add_error('customer', "Debe rellenar al menos un campo para la búsqueda avanzada.")
+            self.add_error('birth_date', "")
+            self.add_error('newsletter', "")
+        else:
+            if birth_date and birth_date > forms.fields.datetime.date.today():
+                self.add_error('birth_date', "La fecha de nacimiento no puede ser en el futuro.")
         
         return cleaned_data

@@ -4,7 +4,7 @@ from django.shortcuts import render
 from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -618,6 +618,45 @@ def pedido_busqueda_avanzada(request):
         'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
         'pedidos': orders_encontrados,
     })
+    
+#Read Profile avanzado
+def perfil_busqueda_avanzada(request):
+    QSperfiles = Profile.objects.select_related("customer").all()
+    if (len(request.GET) > 0):
+        formulario_busqueda_avanzada = PerfilBusquedaAvanzadaForm(request.GET)
+        if (formulario_busqueda_avanzada.is_valid()):
+            mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
+            #obtenemos los filtros
+            customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
+            birth_date = formulario_busqueda_avanzada.cleaned_data.get('birthdate')
+            newsletter = formulario_busqueda_avanzada.cleaned_data.get('newsletter')
+            
+            #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
+            if customer is not None:
+                QSperfiles = QSperfiles.filter(customer=customer)
+                mensaje_busqueda += f"- Customer: {customer.first_name} {customer.last_name}\n"
+            if birth_date is not None:
+                QSperfiles = QSperfiles.filter(birthdate=birth_date)
+                mensaje_busqueda += f"- Birthdate: {birth_date}\n"
+            if newsletter is not None:
+                QSperfiles = QSperfiles.filter(newsletter=newsletter)
+                mensaje_busqueda += f"- Newsletter: {newsletter}\n"
+            perfiles_encontrados = QSperfiles.all()
+            
+            return render(request, 'componentes/perfil_busqueda.html', {
+                'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+                'perfiles': perfiles_encontrados,
+                'mensaje_busqueda': mensaje_busqueda
+            })
+        else:
+            perfiles_encontrados = QSperfiles.all()
+    else:
+        perfiles_encontrados = QSperfiles.all()
+        formulario_busqueda_avanzada = PerfilBusquedaAvanzadaForm(None)
+    return render(request, 'componentes/perfil_busqueda_avanzada.html', {
+        'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
+        'perfiles': perfiles_encontrados,
+    })
 
 #UPDATE 
 def producto_update(request, product_id):
@@ -714,6 +753,25 @@ def pedido_update(request, order_id):
                 pass  
     return render(request, 'componentes/actualizar_pedido.html', {'formulario_o': formulario_o, 'pedido': pedido})
 
+#UPDATE Profile
+def perfil_update(request, profile_id):
+    perfil = Profile.objects.get(id=profile_id)
+    datosperfil= None
+    if request.method == 'POST':
+        datosperfil = request.POST
+        
+    formulario_p = ProfileForm(datosperfil, instance=perfil)
+    
+    if (request.method == 'POST'):
+        if formulario_p.is_valid():
+            try:
+                formulario_p.save()
+                messages.success(request, 'Perfil actualizado correctamente.')
+                return redirect('profile_list')
+            except Exception as e:
+                pass  
+    return render(request, 'componentes/actualizar_perfil.html', {'formulario_p': formulario_p, 'perfil': perfil})
+
 #CRUD DELETE
 def producto_delete(request, product_id):
     producto = Product.objects.get(id=product_id)
@@ -773,6 +831,18 @@ def pedido_delete(request, order_id):
     except Exception as e:
         pass
     return redirect('home')
+
+#CRUD DELETE Profile
+def perfil_delete(request, profile_id):
+    perfil = Profile.objects.get(id=profile_id)
+    
+    try:
+        perfil.delete()
+        messages.success(request, 'Perfil eliminado correctamente.')
+        return redirect('profile_list')
+    except Exception as e:
+        pass
+    return redirect('profile_list')
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)
