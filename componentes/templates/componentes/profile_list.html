@@ -1,0 +1,8 @@
+{% extends "./home.html" %}
+    {% block busqueda %}
+    {% endblock %}
+    {% block cabecera %}
+        {% for perfil in perfiles %}
+            {% include "componentes/includes/perfil.html" %} {# Template tag include 3 #}
+        {% endfor %}
+    {% endblock cabecera %}

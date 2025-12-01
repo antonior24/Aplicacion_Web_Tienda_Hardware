@@ -19,12 +19,15 @@ urlpatterns = [
     path('stats/manufacturers/products-count/', views.stats_manufacturers_products, name='stats_manufacturers_products'),
     path('customers/', views.customer_list, name='customer_list'),
     path('categories/', views.category_list, name='category_list'),
+    #path('orders/', views.order_list, name='order_list'),
+    path('profile/', views.profile_list, name='profile_list'),
     #CRUD CREATE
     path('product/create/', views.producto_create, name='producto_create'),
     path('manufacturer/create/', views.fabricante_create, name='fabricante_create'),
     path('customer/create/', views.customer_create, name='cliente_create'),
     path('category/create/', views.category_create, name='category_create'),
     path('order/create/', views.order_create, name='order_create'),
+    path('profile/create/', views.profile_create, name='profile_create'),
     
     #CRUD READ
     path('product/buscar/', views.producto_buscar, name='producto_buscar'),

@@ -1,10 +1,10 @@
 from itertools import count
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem
+from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -56,6 +56,16 @@ def manufacturers_list(request):
     fabricantes = Manufacturer.objects.prefetch_related("producto_manufacturer").order_by("name")
     fabricantes = fabricantes.all()
     return render(request, 'componentes/manufacturers_list.html', {"fabricantes_mostrar": fabricantes})
+
+def profile_list(request):
+    """
+    SQL (aprox):
+    -- SELECT p.*, c.first_name, c.last_name
+    -- FROM componentes_profile p
+    -- INNER JOIN componentes_customer c ON p.customer_id = c.id;
+    """
+    perfiles = Profile.objects.select_related("customer").all()
+    return render(request, 'componentes/profile_list.html', {"perfiles": perfiles})
 
 def product_detail(request, product_id):
     """
@@ -332,6 +342,32 @@ def order_crear(formulario_o):
     if formulario_o.is_valid():
         try:
             formulario_o.save()
+            formulario_creado = True
+        except:
+            pass
+    return formulario_creado
+
+#CRUD CREATE Profile
+def profile_create(request):
+    datosprofile= None
+    if request.method == 'POST':
+        datosprofile = request.POST
+        
+    formulario_p = ProfileForm(datosprofile)
+    
+    if (request.method == 'POST'):
+        formulario_creado = profile_crear(formulario_p)
+        if (formulario_creado):
+            messages.success(request, 'Perfil creado correctamente.')
+            return redirect('profile_list')
+    
+    return render(request, 'componentes/crear_perfil.html', {'formulario_p': formulario_p})
+
+def profile_crear(formulario_p):
+    formulario_creado = False
+    if formulario_p.is_valid():
+        try:
+            formulario_p.save()
             formulario_creado = True
         except:
             pass

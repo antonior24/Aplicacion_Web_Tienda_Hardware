@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Manufacturer, Category, Customer, Order, ShipmentDetail
+from .models import Product, Manufacturer, Category, Customer, Order, Profile
 
 #CRUD CREATE
 class ProductoForm(forms.ModelForm):
@@ -68,6 +68,21 @@ class OrderForm(forms.ModelForm):
                 self.add_error('customer', "El cliente es obligatorio.")
             return cleaned_data
         
+#Sexto CREATE
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['customer', 'birth_date', 'newsletter', 'notes']
+        widgets = {
+            'birth_date': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 3}), 
+        }
+        def clean(self):
+            cleaned_data = super().clean()
+            customer = cleaned_data.get('customer')
+            if customer is None:
+                self.add_error('customer', "El cliente es obligatorio.")
+            return cleaned_data
 #READ
 class ProductoBuscarForm(forms.Form):
     textoBusqueda = forms.CharField(required=True)
