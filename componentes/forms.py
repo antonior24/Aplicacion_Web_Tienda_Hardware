@@ -1,6 +1,7 @@
 from django import forms
 from .models import Product, Manufacturer, Category, Customer, Order, Profile, User
 from django.contrib.auth.forms import UserCreationForm
+from datetime import date, timedelta
 
 #CRUD CREATE
 class ProductoForm(forms.ModelForm):
@@ -33,6 +34,18 @@ class ManufacturerForm(forms.ModelForm):
             'website': forms.URLInput(),
             'established': forms.DateInput(attrs={'type': 'date'}),
         }
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        website = cleaned_data.get('website')
+        established = cleaned_data.get('established')
+        active = cleaned_data.get('active')
+        
+        if website and not (website.startswith('http://') or website.startswith('https://')):
+            self.add_error('website', "La URL del sitio web debe comenzar con http:// o https://")
+        if ( established is None):
+            self.add_error('established',"La fecha de establecimiento no puede ser nula")
+            return cleaned_data
     
 class CustomerForm(forms.ModelForm):
     class Meta:
@@ -41,6 +54,20 @@ class CustomerForm(forms.ModelForm):
         widgets = {
             'wishlist': forms.CheckboxSelectMultiple(), 
         }
+    def clean(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get('first_name')
+        last_name = cleaned_data.get('last_name')
+        email = cleaned_data.get('email')
+        wishlist = cleaned_data.get('wishlist')
+        phone = cleaned_data.get('phone')
+        
+        # comprobar que haya al menos un elemento seleccionado en wishlist
+        if not wishlist or wishlist.count() == 0:
+            self.add_error('wishlist', "Debe seleccionar al menos un producto en la lista de deseos.")
+        if (len(phone) < 7):
+            self.add_error('phone', "El teléfono debe tener al menos 7 dígitos")
+        return cleaned_data
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -48,7 +75,20 @@ class CategoryForm(forms.ModelForm):
         fields = ['name', 'slug', 'description', 'parent']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
+            'name': forms.TextInput(attrs={'maxlength': 60}),
         }
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        slug = cleaned_data.get('slug')
+        
+        # Nombre y descripción no pueden ser iguales
+        #El slug no puede ser mayor que el nombre
+        if name == slug:
+            self.add_error('slug', "El slug no puede ser igual al nombre.")
+        if len(slug) > len(name):
+            self.add_error('slug', "El slug no puede ser más largo que el nombre.")
+        return cleaned_data
 
 #quinto CREATE
 class OrderForm(forms.ModelForm):
@@ -59,15 +99,15 @@ class OrderForm(forms.ModelForm):
             'products': forms.CheckboxSelectMultiple(),
             'total': forms.NumberInput(attrs={'step': '0.01'}),  # Para decimales
         }
-        def clean(self):
-            cleaned_data = super().clean()
-            customer = cleaned_data.get('customer')
-            total = cleaned_data.get('total')
-            if total < 0:
-                self.add_error('total', "El total no puede ser negativo.")
-            if customer is None:
-                self.add_error('customer', "El cliente es obligatorio.")
-            return cleaned_data
+    def clean(self):
+        cleaned_data = super().clean()
+        customer = cleaned_data.get('customer')
+        total = cleaned_data.get('total')
+        if total < 0:
+            self.add_error('total', "El total no puede ser negativo.")
+        if customer is None:
+            self.add_error('customer', "El cliente es obligatorio.")
+        return cleaned_data
         
 #Sexto CREATE
 class ProfileForm(forms.ModelForm):
@@ -78,12 +118,21 @@ class ProfileForm(forms.ModelForm):
             'birth_date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'notes': forms.Textarea(attrs={'rows': 3}), 
         }
-        def clean(self):
-            cleaned_data = super().clean()
-            customer = cleaned_data.get('customer')
-            if customer is None:
-                self.add_error('customer', "El cliente es obligatorio.")
-            return cleaned_data
+    def clean(self):
+        cleaned_data = super().clean()
+        customer = cleaned_data.get('customer')
+        birth_date = cleaned_data.get('birth_date')
+        # la fecha de nacimiento debe tener minimo 18 años
+        #if birth_date and birth_date > forms.fields.datetime.date.today():
+        #    self.add_error('birth_date', "La fecha de nacimiento no puede ser en el futuro.")
+        if birth_date:
+            today = date.today()
+            age_limit = today - timedelta(days=18*365.25)  # Aproximadamente 18 años
+            if birth_date > age_limit:
+                self.add_error('birth_date', "El cliente debe tener al menos 18 años.")
+        if customer is None:
+            self.add_error('customer', "El cliente es obligatorio.")
+        return cleaned_data
 #READ
 class ProductoBuscarForm(forms.Form):
     textoBusqueda = forms.CharField(required=True)
@@ -131,8 +180,11 @@ class ProductoBusquedaAvanzadaForm(forms.Form):
         else:
             #if textoBusqueda != '' and len(description) < 3:
              #   self.add_error('textoBusqueda', "La descripcion debe tener al menos 3 caracteres.")
-            if not price is None and price <= 0:
+            if not price is None and price <= 1:
                 self.add_error('price', "El precio debe ser mayor que 0.")
+            #stock debe ser positivo
+            if not stock is None and stock < 0:
+                self.add_error('stock', "El stock no puede ser negativo.")
                 
         # Retornamos los datos limpiados
         return self.cleaned_data
@@ -161,9 +213,9 @@ class FabricanteBusquedaAvanzadaForm(forms.Form):
         else:
             if name and len(name) < 3:
                 self.add_error('name', "El nombre debe tener al menos 3 caracteres.")
-            
-            if website and not (website.startswith('http://') or website.startswith('https://')):
-                self.add_error('website', "La URL del sitio web debe comenzar con http:// o https://")
+            # la fecha de establecimiento no puede ser en el futuro
+            if established and established > forms.fields.datetime.date.today():
+                self.add_error('established', "La fecha de establecimiento no puede ser en el futuro.")
         
         return cleaned_data
 # READ avanzado de clientes
@@ -191,8 +243,9 @@ class ClienteBusquedaAvanzadaForm(forms.Form):
         else:
             if first_name and len(first_name) < 2:
                 self.add_error('first_name', "El nombre debe tener al menos 2 caracteres.")
-            if last_name and len(last_name) < 2:
-                self.add_error('last_name', "El apellido debe tener al menos 2 caracteres.")
+            # el email debe contener '@'
+            if email and 'gmail' not in email:
+                self.add_error('email', "El email debe ser un gmail(hotmail, outlook, etc no válidos).")
         
         return cleaned_data
     
@@ -217,8 +270,9 @@ class CategoriaBusquedaAvanzadaForm(forms.Form):
         else:
             if name and len(name) < 3:
                 self.add_error('name', "El nombre debe tener al menos 3 caracteres.")
-            if slug and len(slug) < 3:
-                self.add_error('slug', "El slug debe tener al menos 3 caracteres.")
+            #la descripcion no puede ser igual al nombre
+            if description and name and description == name:
+                self.add_error('description', "La descripción no puede ser igual al nombre.")
         
         return cleaned_data
 
@@ -226,19 +280,22 @@ class CategoriaBusquedaAvanzadaForm(forms.Form):
 class PedidoBusquedaAvanzadaForm(forms.Form):
     customer = forms.ModelChoiceField(queryset=Customer.objects.all(), required=False)
     status = forms.ChoiceField(choices=[('', '---------')] + list(Order.STATUS_CHOICES), required=False)
-    total = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    total_min = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
+    total_max = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
     products = forms.ModelMultipleChoiceField(queryset=Product.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
     
     def clean(self):
         cleaned_data = super().clean()
         customer = cleaned_data.get('customer')
         status = cleaned_data.get('status')
-        total = cleaned_data.get('total')
+        total_min = cleaned_data.get('total_min')
+        total_max = cleaned_data.get('total_max')
         products = cleaned_data.get('products')
         
         if (customer is None
             and status == ''
-            and total is None
+            and total_min is None
+            and total_max is None
             and products.count() == 0):
             self.add_error('customer', "Debe rellenar al menos un campo para la búsqueda avanzada.")
             self.add_error('status', "")
@@ -246,8 +303,16 @@ class PedidoBusquedaAvanzadaForm(forms.Form):
             self.add_error('total_max', "")
             self.add_error('products', "")
         else:
-            if not total is None and total < 0:
-                self.add_error('total', "El total no puede ser negativo.")
+            # productos no puede estar vacío
+            if products.count() == 0:
+                self.add_error('products', "Debe seleccionar al menos un producto.")
+            #el total maximo debe ser mayor que el minimo
+            if not total_min is None and total_min < 0:
+                self.add_error('total_min', "El total mínimo no puede ser negativo.")
+            if not total_max is None and total_max < 0:
+                self.add_error('total_max', "El total máximo no puede ser negativo.")
+            if not total_min is None and not total_max is None and total_max < total_min:
+                self.add_error('total_max', "El total máximo debe ser mayor o igual al total mínimo.")
         
         return cleaned_data
     

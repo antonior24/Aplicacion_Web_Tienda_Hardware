@@ -593,7 +593,8 @@ def pedido_busqueda_avanzada(request):
             #obtenemos los filtros
             customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
             status = formulario_busqueda_avanzada.cleaned_data.get('status')
-            total = formulario_busqueda_avanzada.cleaned_data.get('total')
+            total_min = formulario_busqueda_avanzada.cleaned_data.get('total_min')
+            total_max = formulario_busqueda_avanzada.cleaned_data.get('total_max')
             products = formulario_busqueda_avanzada.cleaned_data.get('products')
             
             #Por cada filtro comprobamos si tiene un valor y lo añadimos a la QuerySet
@@ -603,9 +604,12 @@ def pedido_busqueda_avanzada(request):
             if status != '':
                 QSorders = QSorders.filter(status__icontains=status)
                 mensaje_busqueda += f"- Status: {status}\n"
-            if total is not None:
-                QSorders = QSorders.filter(total=total)
-                mensaje_busqueda += f"- Total: {total}\n"
+            if total_min is not None:
+                QSorders = QSorders.filter(total__gte=total_min)
+                mensaje_busqueda += f"- Total mínimo: {total_min}\n"
+            if total_max is not None:
+                QSorders = QSorders.filter(total__lte=total_max)
+                mensaje_busqueda += f"- Total máximo: {total_max}\n"
             if products.count() > 0:
                 for producto in products:
                     QSorders = QSorders.filter(products=producto)
