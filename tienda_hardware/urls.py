@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('componentes.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 handler404 = "componentes.views.mi_error_404"

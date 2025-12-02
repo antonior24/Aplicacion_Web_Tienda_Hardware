@@ -29,5 +29,31 @@
     <p><a href="{% url 'categoria_busqueda_avanzada' %}">Búsqueda avanzada de categorías</a></p>
     <p><a href="{% url 'pedido_busqueda_avanzada' %}">Búsqueda avanzada de pedidos</a></p>
     <p><a href="{% url 'perfil_busqueda_avanzada' %}">Búsqueda avanzada de perfiles</a></p>
+
+    <p><a href="{% url 'registrar_usuario' %}">Registrar nuevo usuario</a></p>
+
+    <div class="ml-2">
+    {% if not request.user.is_authenticated %}
+        <a class="btn btn-outline-warning" href="{% url 'login' %}">
+            Login
+        </a>
+    {% endif %}
+
+    {% if not request.user.is_authenticated %}
+        <a class="btn btn-outline-warning" href="{% url 'registrar_usuario' %}">
+            Registrarse
+        </a>
+    {% endif %}
+
+    {% if request.user.is_authenticated %}
+        <form action="{% url 'logout' %}" class="d-flex m-3" role="search" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-light btn-outline-dark" type="submit">
+                Desconectarse
+            </button>
+        </form>
+    {% endif %}
+</div>
+
 {% endblock contenido %}
    

@@ -1,15 +1,23 @@
+from datetime import datetime
 from itertools import count
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile
+from .models import Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile, User, Dependiente, Cliente
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm, RegistroForm
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.contrib.auth import login
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
+
 def home(request):
+    
+    if (not "fecha_inicio" in request.session):
+        request.session["fecha_inicio"] = datetime.now().strftime("%d %H:%M:%S")
+    
     return render(request, 'componentes/home.html', {})
 
 def product_list(request):
@@ -833,6 +841,7 @@ def pedido_delete(request, order_id):
     return redirect('home')
 
 #CRUD DELETE Profile
+@permission_required('componentes.delete_profile')
 def perfil_delete(request, profile_id):
     perfil = Profile.objects.get(id=profile_id)
     
@@ -843,6 +852,26 @@ def perfil_delete(request, profile_id):
     except Exception as e:
         pass
     return redirect('profile_list')
+
+#Sesiones
+def registrar_usuario(request):
+    if request.method == 'POST':
+        form = RegistroForm(request.POST)
+        if form.is_valid():
+            usuario = form.save()
+            rol = int(form.cleaned_data.get('rol'))
+            if (rol == User.CLIENTE):
+                cliente = Cliente.objects.create(user=usuario)
+                cliente.save()
+            elif (rol == User.DEPENDIENTE):
+                dependiente = Dependiente.objects.create(user=usuario)
+                dependiente.save()
+            messages.success(request, 'Usuario registrado correctamente.')
+            login(request, usuario)
+            return redirect('home')
+    else:
+        form = RegistroForm()
+    return render(request, 'registration/signup.html', {'form': form})
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

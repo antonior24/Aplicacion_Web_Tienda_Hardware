@@ -1,5 +1,6 @@
 from django import forms
-from .models import Product, Manufacturer, Category, Customer, Order, Profile
+from .models import Product, Manufacturer, Category, Customer, Order, Profile, User
+from django.contrib.auth.forms import UserCreationForm
 
 #CRUD CREATE
 class ProductoForm(forms.ModelForm):
@@ -273,3 +274,14 @@ class PerfilBusquedaAvanzadaForm(forms.Form):
                 self.add_error('birth_date', "La fecha de nacimiento no puede ser en el futuro.")
         
         return cleaned_data
+
+#Formulario de registro de usuario
+class RegistroForm(UserCreationForm):
+    roles = (
+            (User.CLIENTE, 'Cliente'),
+            (User.DEPENDIENTE, 'Dependiente'),
+    )
+    rol = forms.ChoiceField(choices=roles)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'rol', 'password1', 'password2', 'rol']

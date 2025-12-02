@@ -53,4 +53,6 @@ urlpatterns = [
     path('category/delete/<int:category_id>/', views.categoria_delete, name='categoria_delete'),
     path('order/delete/<int:order_id>/', views.pedido_delete, name='pedido_delete'),
     path('profile/delete/<int:profile_id>/', views.perfil_delete, name='perfil_delete'),
+    #Sessions
+    path('registrar/', views.registrar_usuario, name='registrar_usuario'),
 ]
