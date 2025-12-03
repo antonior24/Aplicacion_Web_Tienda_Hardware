@@ -772,7 +772,7 @@ def pedido_update(request, order_id):
             try:
                 formulario_o.save()
                 messages.success(request, 'Pedido actualizado correctamente.')
-                return redirect('home')
+                return redirect('order_list')
             except Exception as e:
                 pass  
     return render(request, 'componentes/actualizar_pedido.html', {'formulario_o': formulario_o, 'pedido': pedido})
