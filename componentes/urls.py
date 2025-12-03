@@ -55,4 +55,7 @@ urlpatterns = [
     path('profile/delete/<int:profile_id>/', views.perfil_delete, name='perfil_delete'),
     #Sessions
     path('registrar/', views.registrar_usuario, name='registrar_usuario'),
+    # Subida de documentos
+    path('documento/subir/', views.subir_documento, name='subir_documento'),
+    path('documentos/', views.lista_documentos, name='lista_documentos'),
 ]

@@ -5,3 +5,4 @@ django-debug-toolbar~=4.4.6
 faker
 django-bootstrap5~=24.3
 django-bootstrap-icons~=0.8.6
+pillow~=10.4.0

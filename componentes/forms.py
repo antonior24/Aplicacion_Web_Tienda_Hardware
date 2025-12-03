@@ -1,7 +1,13 @@
 from django import forms
-from .models import Product, Manufacturer, Category, Customer, Order, Profile, User
+from .models import Product, Manufacturer, Category, Customer, Order, Profile, User, Documento
 from django.contrib.auth.forms import UserCreationForm
 from datetime import date, timedelta
+
+#subida de documentos
+class DocumentoForm(forms.ModelForm):
+    class Meta:
+        model = Documento
+        fields = ['titulo', 'imagen', 'archivo']
 
 #CRUD CREATE
 class ProductoForm(forms.ModelForm):
@@ -337,6 +343,12 @@ class PerfilBusquedaAvanzadaForm(forms.Form):
         else:
             if birth_date and birth_date > forms.fields.datetime.date.today():
                 self.add_error('birth_date', "La fecha de nacimiento no puede ser en el futuro.")
+            #no puede tener mas de 120 años
+            if birth_date:
+                today = date.today()
+                age_limit = today - timedelta(days=120*365.25)  # Aproximadamente 120 años
+                if birth_date < age_limit:
+                    self.add_error('birth_date', "La fecha de nacimiento no puede indicar más de 120 años.")
         
         return cleaned_data
 
