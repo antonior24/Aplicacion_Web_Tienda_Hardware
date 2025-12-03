@@ -1,30 +1,27 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Lista de documentos</title>
-</head>
-<body>
-    <h1>Documentos</h1>
+{% extends "./home.html" %}
+    {% block busqueda %}
+    {% endblock %}
+    {% block cabecera %}
+            <h1>Documentos</h1>
 
-    <p><a href="{% url 'subir_documento' %}">Subir nuevo</a></p>
+                <p><a href="{% url 'subir_documento' %}">Subir nuevo</a></p>
 
-    <ul>
-        {% for doc in documentos %}
-            <li>
-                <strong>{{ doc.titulo }}</strong><br>
+                <ul>
+                    {% for doc in documentos %}
+                        <li>
+                            <strong>{{ doc.titulo }}</strong><br>
 
-                {% if doc.imagen %}
-                    <img src="{{ doc.imagen.url }}" alt="{{ doc.titulo }}" style="max-width:200px;"><br>
-                {% endif %}
+                            {% if doc.imagen %}
+                                <img src="{{ doc.imagen.url }}" alt="{{ doc.titulo }}" style="max-width:200px;"><br>
+                            {% endif %}
 
-                {% if doc.archivo %}
-                    <a href="{{ doc.archivo.url }}" target="_blank">Descargar archivo</a>
-                {% endif %}
-            </li>
-        {% empty %}
-            <li>No hay documentos subidos.</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+                            {% if doc.archivo %}
+                                <a href="{{ doc.archivo.url }}" target="_blank">Descargar archivo</a>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li>No hay documentos subidos.</li>
+                    {% endfor %}
+                </ul>
+            
+    {% endblock cabecera %}

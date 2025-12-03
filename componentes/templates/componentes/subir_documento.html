@@ -1,12 +1,11 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Subir documento</title>
-</head>
-<body>
-    <h1>Subir documento</h1>
+{% extends './home.html' %}
+{% load django_bootstrap5 %}
+{% load bootstrap_icons %}
+
+
+
+{% block cabecera %}
+  <h1>Subir documento</h1>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -15,5 +14,6 @@
     </form>
 
     <p><a href="{% url 'lista_documentos' %}">Ver documentos</a></p>
-</body>
-</html>
+{% endblock cabecera %}
+
+
