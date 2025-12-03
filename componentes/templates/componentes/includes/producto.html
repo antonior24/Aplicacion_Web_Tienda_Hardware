@@ -31,10 +31,50 @@
             </button>
         </div>
         <div class="mb-2">
-            <form action = "{% url 'producto_delete' productos.id %}" method = "post"> 
-                {% csrf_token %}
-                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                    <span>{% bs_icon 'trash' %}</span>
-                </button> 
-            </form>
+    {# Botón que abre el modal, NO borra aún #}
+            <button type="button"
+                    class="btn btn-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalEliminar{{ productos.id }}">
+                <span>{% bs_icon 'trash' %}</span>
+            </button>
+        </div>
+        {# Modal de confirmación de borrado #}
+        <div class="modal fade"
+             id="modalEliminar{{ productos.id }}"
+             tabindex="-1"
+             aria-labelledby="modalEliminarLabel{{ productos.id }}"
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"
+                            id="modalEliminarLabel{{ productos.id }}">
+                            Confirmar eliminación
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro de que desea eliminar el producto "{{ productos.name }}"?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <form method="post"
+                              action="{% url 'producto_delete' productos.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-danger">
+                                Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>

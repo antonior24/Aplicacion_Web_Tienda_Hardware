@@ -1,0 +1,30 @@
+<div>
+    <h2> Nombre: {{ orden.customer.first_name | title }} {{ orden.customer.last_name | title }}</h2> {# Filter title 4 #}
+    <p>Estado: {{ orden.status | upper }}</p> {# Filter upper 3 #}
+    <p>Total: {{ orden.total }}</p>
+    <p>Productos en el pedido:</p>
+    <ul>
+    {% for producto in orden.products.all %}
+        <li>{{ producto.name | capfirst }}</li> {# Filter capfirst 5 #}
+    {% empty %} {# Template tag empty 1 #}
+        <li>Este pedido no tiene productos asignados.</li> 
+    {% endfor %}
+    </ul>   
+    {% load bootstrap_icons %}
+        <div class="mb-2">
+            <button type="button" 
+                    class="btn btn-outline-primary"> 
+                    {# <a href="{% url 'libro_editar' libro.id %}" ><span>{% bs_icon 'pencil' %}</span></a> hacer esto adaptado a Actualizar producto #}
+                    <a href="{% url 'pedido_update' orden.id %}"><span>{% bs_icon 'pencil' %}</span></a>
+                    
+            </button>
+        </div>
+        <div class="mb-2">
+            <form action = "{% url 'pedido_delete' orden.id %}" method = "post"> 
+                {% csrf_token %}
+                <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                    <span>{% bs_icon 'trash' %}</span>
+                </button> 
+            </form>
+        </div>
+</div>

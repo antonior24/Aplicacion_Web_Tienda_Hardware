@@ -53,6 +53,18 @@ def category_list(request):
     categorias = categorias.all()
     return render(request, 'componentes/category_list.html', {"categorias": categorias})
 
+def order_list(request):
+    """
+    SQL (aprox):
+    -- SELECT o.*, c.first_name, c.last_name
+    -- FROM componentes_order o
+    -- INNER JOIN componentes_customer c ON o.customer_id = c.id
+    -- ORDER BY o.created_at DESC;
+    """
+    ordenes = Order.objects.select_related("customer").order_by("-created_at")
+    ordenes = ordenes.all()
+    return render(request, 'componentes/order_list.html', {"ordenes_mostrar": ordenes})
+
 def manufacturers_list(request):
     """
     SQL (aprox):
@@ -342,7 +354,7 @@ def order_create(request):
         formulario_creado = order_crear(formulario_o)
         if (formulario_creado):
             messages.success(request, 'Pedido creado correctamente.')
-            return redirect('home')
+            return redirect('order_list')
     
     return render(request, 'componentes/crear_pedido.html', {'formulario_o': formulario_o})
 def order_crear(formulario_o):
@@ -785,16 +797,30 @@ def perfil_update(request, profile_id):
     return render(request, 'componentes/actualizar_perfil.html', {'formulario_p': formulario_p, 'perfil': perfil})
 
 #CRUD DELETE
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from django.db.models.deletion import ProtectedError
+
 def producto_delete(request, product_id):
-    producto = Product.objects.get(id=product_id)
-    
-    try:
-        producto.delete()
-        messages.success(request, 'Producto eliminado correctamente.')
+    producto = get_object_or_404(Product, id=product_id)
+
+    if request.method == 'POST':
+        try:
+            producto.delete()
+            messages.success(request, 'Producto eliminado correctamente.')
+        except ProtectedError:
+            messages.error(
+                request,
+                'No se puede eliminar este producto porque está asociado a pedidos u otros registros. Por favor, elimine primero las dependencias u otro producto que no este asociado a OrderItem'
+            )
         return redirect('product_list')
-    except Exception as e:
-        pass
-    return redirect('product_detail')
+
+    return redirect('product_list')
+
+
 
 #CRUD DELETE Fabricante
 def fabricante_delete(request, manufacturer_id):
@@ -839,13 +865,13 @@ def pedido_delete(request, order_id):
     try:
         pedido.delete()
         messages.success(request, 'Pedido eliminado correctamente.')
-        return redirect('home')
+        return redirect('order_list')
     except Exception as e:
         pass
-    return redirect('home')
+    return redirect('order_list')
 
 #CRUD DELETE Profile
-@permission_required('componentes.delete_profile')
+#@permission_required('componentes.delete_profile')
 def perfil_delete(request, profile_id):
     perfil = Profile.objects.get(id=profile_id)
     

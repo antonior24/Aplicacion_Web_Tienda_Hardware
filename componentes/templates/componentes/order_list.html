@@ -1,0 +1,8 @@
+{% extends "./home.html" %}
+    {% block busqueda %}
+    {% endblock %}
+    {% block cabecera %}
+        {% for orden in ordenes_mostrar %}
+            {% include "componentes/includes/order.html" %} {# Template tag include 3 #}
+        {% endfor %}
+    {% endblock cabecera %}

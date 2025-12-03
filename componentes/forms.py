@@ -15,8 +15,8 @@ class ProductoForm(forms.ModelForm):
         model = Product
         fields = ['sku', 'name', 'description', 'price', 'stock', 'manufacturer', 'categories']
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 4}),
-            'categories': forms.CheckboxSelectMultiple(),
+            'description': forms.Textarea(attrs={'rows': 4}), # Widget1 textarea para descripcion
+            'categories': forms.CheckboxSelectMultiple(),   #Widget2 checkbox 
         }
     def clean(self):
         cleaned_data = super().clean()
@@ -37,8 +37,8 @@ class ManufacturerForm(forms.ModelForm):
         model = Manufacturer
         fields = ['name','website', 'established', 'active']
         widgets = {
-            'website': forms.URLInput(),
-            'established': forms.DateInput(attrs={'type': 'date'}),
+            'website': forms.URLInput(), #Widget3 widget para url
+            'established': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'), #Widget4 para fecha
         }
     def clean(self):
         cleaned_data = super().clean()
@@ -59,6 +59,7 @@ class CustomerForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'phone', 'wishlist']
         widgets = {
             'wishlist': forms.CheckboxSelectMultiple(), 
+            'phone': forms.TextInput(attrs={'maxlength': 20}), #Widget5 widget para telefono
         }
     def clean(self):
         cleaned_data = super().clean()
@@ -82,6 +83,7 @@ class CategoryForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'name': forms.TextInput(attrs={'maxlength': 60}),
+            'parent': forms.Select() #Widget6 widget para seleccionar parent
         }
     def clean(self):
         cleaned_data = super().clean()
@@ -103,7 +105,7 @@ class OrderForm(forms.ModelForm):
         fields = ['customer', 'status', 'total', 'products']
         widgets = {
             'products': forms.CheckboxSelectMultiple(),
-            'total': forms.NumberInput(attrs={'step': '0.01'}),  # Para decimales
+            'total': forms.NumberInput(attrs={'step': '0.01'}),  #Widget7 para decimales
         }
     def clean(self):
         cleaned_data = super().clean()
@@ -122,7 +124,8 @@ class ProfileForm(forms.ModelForm):
         fields = ['customer', 'birth_date', 'newsletter', 'notes']
         widgets = {
             'birth_date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
-            'notes': forms.Textarea(attrs={'rows': 3}), 
+            'notes': forms.PasswordInput(render_value=True), #Widget8 widget para notas como contraseña
+            'newsletter': forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'}) #Widget9 widget para newsletter
         }
     def clean(self):
         cleaned_data = super().clean()

@@ -1,6 +1,109 @@
 # Aplicacion_Web_Tienda_Hardware
 Hay que hacer loaddata de datos_urls.json
 
+Validaciones implementadas en componentes/forms.py
+
+- ProductoForm
+  - price: debe ser > 1 (si <= 1 se añade error en 'price').
+  - stock: debe ser > 1 (si <= 1 se añade error en 'stock').
+  - name: no puede ser nulo (si es None se añade error en 'name').
+
+- ManufacturerForm
+  - website: si existe, debe comenzar por "http://" o "https://".
+  - established: no puede ser nulo.
+
+- CustomerForm
+  - wishlist: debe contener al menos un producto (si vacío se añade error).
+  - phone: longitud mínima 7 dígitos (si menor se añade error).
+
+- CategoryForm
+  - slug: no puede ser igual a name.
+  - slug: no puede ser más largo que name.
+
+- OrderForm
+  - total: no puede ser negativo.
+  - customer: es obligatorio.
+
+- ProfileForm
+  - birth_date: el cliente debe tener al menos 18 años (se calcula con timedelta).
+  - customer: es obligatorio.
+
+- ProductoBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse (si todos vacíos añade errores en varios campos).
+  - price: si presente, debe ser > 1.
+  - stock: si presente, no puede ser negativo.
+
+- FabricanteBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse.
+  - name: si presente, mínimo 3 caracteres.
+  - established: no puede ser una fecha futura.
+
+- ClienteBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse.
+  - first_name: mínimo 2 caracteres si presente.
+  - email: debe contener 'gmail' según la validación (código actual).
+
+- CategoriaBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse.
+  - name: mínimo 3 caracteres si presente.
+  - description: no puede ser igual a name.
+
+- PedidoBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse.
+  - products: debe contener al menos un producto.
+  - total_min/total_max: no pueden ser negativos.
+  - total_max >= total_min (si ambos presentes).
+
+- PerfilBusquedaAvanzadaForm
+  - Al menos un campo debe rellenarse.
+  - birth_date: no puede ser futura.
+  - birth_date: no puede indicar más de 120 años.
+
+Widgets usados en componentes/forms.py (por formulario)
+
+- ProductoForm
+  - description: forms.Textarea(attrs={'rows': 4})
+  - categories: forms.CheckboxSelectMultiple()
+
+- ManufacturerForm
+  - website: forms.URLInput()
+  - established: forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')
+
+- CustomerForm
+  - wishlist: forms.CheckboxSelectMultiple()
+  - phone: forms.TextInput(attrs={'maxlength': 20})
+
+- CategoryForm
+  - description: forms.Textarea(attrs={'rows': 3})
+  - name: forms.TextInput(attrs={'maxlength': 60})
+  - parent: forms.Select()
+
+- OrderForm
+  - products: forms.CheckboxSelectMultiple()
+  - total: forms.NumberInput(attrs={'step': '0.01'})
+
+- ProfileForm
+  - birth_date: forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d')
+  - notes: forms.PasswordInput(render_value=True)
+  - newsletter: forms.CheckboxInput(attrs={'class': 'form-check-input', 'role': 'switch'})
+
+- ProductoBusquedaAvanzadaForm
+  - categories: ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+
+- FabricanteBusquedaAvanzadaForm
+  - established: DateInput(attrs={'type': 'date'})
+  - active: NullBooleanField(widget=forms.Select(choices=[..., ('True','Sí'), ('False','No')]))
+
+- PedidoBusquedaAvanzadaForm
+  - products: ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple)
+
+- PerfilBusquedaAvanzadaForm
+  - birth_date: DateInput(attrs={'type': 'date'})
+  - newsletter: NullBooleanField(widget=forms.Select(...))
+
+- RegistroForm
+  - rol: ChoiceField (widget select por defecto)
+
 1. Template Tags
     
     1- En la plantilla producto.html
