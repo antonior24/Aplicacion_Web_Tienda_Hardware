@@ -32,9 +32,6 @@ class User(AbstractUser):
     
 class Dependiente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-class Cliente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     
 
 # 1) Manufacturer
@@ -92,6 +89,8 @@ class ProductCategory(models.Model):
 
 # 6) Customer
 class Customer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+    
     first_name = models.CharField(max_length=60)
     last_name = models.CharField(max_length=60)
     email = models.EmailField(unique=True)

@@ -2,7 +2,7 @@ from datetime import datetime
 from itertools import count
 from django.http import HttpResponse
 from django.shortcuts import render
-from .models import Documento, Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile, User, Dependiente, Cliente
+from .models import Documento, Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile, User, Dependiente
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
 from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm, RegistroForm, DocumentoForm
@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required
+#Importar Group
+from django.contrib.auth.models import Group
 
 # Create your views here.
 
@@ -240,6 +242,7 @@ def stats_manufacturers_products(request):
         {'fabricantes': fabricantes}
     )
 
+@permission_required('componentes.add_product')
 def producto_create(request):
     datosproducto= None
     if request.method == 'POST':
@@ -266,6 +269,7 @@ def producto_crear(formulario_p):
     return formulario_creado
 
 # Fabricante Create
+@permission_required('componentes.add_manufacturer')
 def fabricante_create(request):
     datosfabricante= None
     if request.method == 'POST':
@@ -292,6 +296,7 @@ def fabricante_crear(formulario_f):
     return formulario_creado
 
 # Crear Customer Create 
+@permission_required('componentes.add_customer')
 def customer_create(request):
     datoscustomer= None
     if request.method == 'POST':
@@ -317,6 +322,7 @@ def customer_crear(formulario_c):
             pass
     return formulario_creado
 
+@permission_required('componentes.add_category')
 def category_create(request):
     datoscategory= None
     if request.method == 'POST':
@@ -325,7 +331,7 @@ def category_create(request):
     formulario_cat = CategoryForm(datoscategory)
     
     if (request.method == 'POST'):
-        formulario_creado = customer_crear(formulario_cat)
+        formulario_creado = customer_crear(formulario_cat)#####
         if (formulario_creado):
             messages.success(request, 'Categoria creada correctamente.')
             return redirect('category_list')
@@ -343,6 +349,7 @@ def category_crear(formulario_cat):
     return formulario_creado
 
 #CRUD CREATE Order
+@permission_required('componentes.add_order')
 def order_create(request):
     datosorder= None
     if request.method == 'POST':
@@ -368,6 +375,7 @@ def order_crear(formulario_o):
     return formulario_creado
 
 #CRUD CREATE Profile
+@permission_required('componentes.add_profile')
 def profile_create(request):
     datosprofile= None
     if request.method == 'POST':
@@ -414,6 +422,7 @@ def producto_buscar(request):
         return redirect('home')
     
 #READ avanzado de productos
+@permission_required('componentes.view_product')
 def producto_busqueda_avanzada(request):
     QSproductos = Product.objects.select_related("manufacturer").prefetch_related("categories")
     if (len(request.GET) > 0):
@@ -475,6 +484,7 @@ def producto_busqueda_avanzada(request):
     })
 
 #READ avanzado de fabricantes
+@permission_required('componentes.view_manufacturer')
 def fabricante_busqueda_avanzada(request):
     QSfabricantes = Manufacturer.objects.all()
     if (len(request.GET) > 0):
@@ -518,6 +528,7 @@ def fabricante_busqueda_avanzada(request):
     })
 
 #READ avanzado de clientes
+@permission_required('componentes.view_customer')
 def cliente_busqueda_avanzada(request):
     QScustomers = Customer.objects.all()
     if (len(request.GET) > 0):
@@ -557,6 +568,7 @@ def cliente_busqueda_avanzada(request):
     })
 
 #READ avanzado de categorias
+@permission_required('componentes.view_category')
 def categoria_busqueda_avanzada(request):
     QScategories = Category.objects.all()
     if (len(request.GET) > 0):
@@ -596,6 +608,7 @@ def categoria_busqueda_avanzada(request):
     })
     
 #CRUD READ avanzado de pedidos
+@permission_required('componentes.view_order')
 def pedido_busqueda_avanzada(request):
     QSorders = Order.objects.all()
     if (len(request.GET) > 0):
@@ -644,6 +657,7 @@ def pedido_busqueda_avanzada(request):
     })
     
 #Read Profile avanzado
+@permission_required('componentes.view_profile')
 def perfil_busqueda_avanzada(request):
     QSperfiles = Profile.objects.select_related("customer").all()
     if (len(request.GET) > 0):
@@ -683,6 +697,7 @@ def perfil_busqueda_avanzada(request):
     })
 
 #UPDATE 
+@permission_required('componentes.change_product')
 def producto_update(request, product_id):
     producto = Product.objects.get(id=product_id)
     datosproducto= None
@@ -702,6 +717,7 @@ def producto_update(request, product_id):
     return render(request, 'componentes/actualizar_producto.html', {'formulario_p': formulario_p, 'producto': producto})
 
 #UPDATE Fabricante
+@permission_required('componentes.change_manufacturer')
 def fabricante_update(request, manufacturer_id):
     fabricante = Manufacturer.objects.get(id=manufacturer_id)
     datosfabricante= None
@@ -721,6 +737,7 @@ def fabricante_update(request, manufacturer_id):
     return render(request, 'componentes/actualizar_fabricante.html', {'formulario_f': formulario_f, 'fabricante': fabricante})
 
 #Cliente UPDATE
+@permission_required('componentes.change_customer')
 def cliente_update(request, customer_id):
     cliente = Customer.objects.get(id=customer_id)
     datoscustomer= None
@@ -740,6 +757,7 @@ def cliente_update(request, customer_id):
     return render(request, 'componentes/actualizar_cliente.html', {'formulario_c': formulario_c, 'cliente': cliente})
 
 #UPDATE Categoria
+@permission_required('componentes.change_category')
 def categoria_update(request, category_id):
     categoria = Category.objects.get(id=category_id)
     datoscategoria= None
@@ -759,6 +777,7 @@ def categoria_update(request, category_id):
     return render(request, 'componentes/actualizar_categoria.html', {'formulario_cat': formulario_cat, 'categoria': categoria})
 
 #UPDATE Order
+@permission_required('componentes.change_order')
 def pedido_update(request, order_id):
     pedido = Order.objects.get(id=order_id)
     datospedido= None
@@ -778,6 +797,7 @@ def pedido_update(request, order_id):
     return render(request, 'componentes/actualizar_pedido.html', {'formulario_o': formulario_o, 'pedido': pedido})
 
 #UPDATE Profile
+@permission_required('componentes.change_profile')
 def perfil_update(request, profile_id):
     perfil = Profile.objects.get(id=profile_id)
     datosperfil= None
@@ -804,6 +824,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
 from django.db.models.deletion import ProtectedError
 
+@permission_required('componentes.delete_product')
 def producto_delete(request, product_id):
     producto = get_object_or_404(Product, id=product_id)
 
@@ -823,6 +844,7 @@ def producto_delete(request, product_id):
 
 
 #CRUD DELETE Fabricante
+@permission_required('componentes.delete_manufacturer')
 def fabricante_delete(request, manufacturer_id):
     fabricante = Manufacturer.objects.get(id=manufacturer_id)
     
@@ -835,6 +857,7 @@ def fabricante_delete(request, manufacturer_id):
     return redirect('manufacturers_list')
 
 #CRUD DELETE Cliente
+@permission_required('componentes.delete_customer')
 def cliente_delete(request, customer_id):
     cliente = Customer.objects.get(id=customer_id)
     
@@ -847,6 +870,7 @@ def cliente_delete(request, customer_id):
     return redirect('customer_list')
 
 #CRUD DELETE Categoria
+@permission_required('componentes.delete_category')
 def categoria_delete(request, category_id):
     categoria = Category.objects.get(id=category_id)
     
@@ -859,6 +883,7 @@ def categoria_delete(request, category_id):
     return redirect('category_list')
 
 #delete Order
+@permission_required('componentes.delete_order')
 def pedido_delete(request, order_id):
     pedido = Order.objects.get(id=order_id)
     
@@ -871,7 +896,7 @@ def pedido_delete(request, order_id):
     return redirect('order_list')
 
 #CRUD DELETE Profile
-#@permission_required('componentes.delete_profile')
+@permission_required('componentes.delete_profile')
 def perfil_delete(request, profile_id):
     perfil = Profile.objects.get(id=profile_id)
     
@@ -891,9 +916,19 @@ def registrar_usuario(request):
             usuario = form.save()
             rol = int(form.cleaned_data.get('rol'))
             if (rol == User.CLIENTE):
-                cliente = Cliente.objects.create(user=usuario)
+                grupo = Group.objects.get(name='Clientes')
+                grupo.user_set.add(usuario)
+                cliente = Customer.objects.create(
+                    user=usuario,
+                    first_name=usuario.first_name or usuario.username,
+                    last_name=usuario.last_name or '',
+                    email=usuario.email or '',
+                    phone='',
+                )
                 cliente.save()
             elif (rol == User.DEPENDIENTE):
+                grupo = Group.objects.get(name='Dependientes')
+                grupo.user_set.add(usuario)
                 dependiente = Dependiente.objects.create(user=usuario)
                 dependiente.save()
             messages.success(request, 'Usuario registrado correctamente.')
@@ -904,6 +939,7 @@ def registrar_usuario(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 #subidas de archivos
+@permission_required('componentes.add_documento')
 def subir_documento(request):
     if request.method == 'POST':
         form = DocumentoForm(request.POST, request.FILES)
@@ -916,6 +952,7 @@ def subir_documento(request):
     return render(request, 'componentes/subir_documento.html', {'form': form})
 
 #lista de documentos
+@permission_required('componentes.view_documento')
 def lista_documentos(request):
     documentos = Documento.objects.all()
     return render(request, 'componentes/lista_documentos.html', {'documentos': documentos})
