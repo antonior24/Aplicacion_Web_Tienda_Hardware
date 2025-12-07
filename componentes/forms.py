@@ -365,3 +365,29 @@ class RegistroForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'rol', 'password1', 'password2', 'rol']
+
+#class PrestamoFormGenericoRequest(forms.Form):
+    
+    #def __init__(self, *args, **kwargs):
+     #   self.request = kwargs.pop("request")
+      #  super(PrestamoFormGenericoRequest, self).__init__(*args, **kwargs)
+       # librosdisponibles = Libro.objects.exclude(prestamo__cliente=self.request.user.cliente).all()
+        #self.fields["libro"] = forms.ModelChoiceField(
+         #   queryset=librosdisponibles,
+          #  widget=forms.Select,
+           # required=True,
+            #empty_label="Ninguna"
+        #)
+        
+class OrderFormRequest(OrderForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(OrderFormRequest, self).__init__(*args, **kwargs)
+        # Filtrar los productos disponibles para el usuario actual
+        productos_disponibles = Product.objects.exclude(orders__customer__user=self.request.user).all()
+        self.fields["products"] = forms.ModelMultipleChoiceField(
+            queryset=productos_disponibles,
+            widget=forms.CheckboxSelectMultiple,
+            required=True,
+            empty_label="Ninguno"
+        )

@@ -16,9 +16,32 @@ from django.contrib.auth.models import Group
 # Create your views here.
 
 def home(request):
-    
-    if (not "fecha_inicio" in request.session):
-        request.session["fecha_inicio"] = datetime.now().strftime("%d %H:%M:%S")
+    # eliminar si usuario no autenticado
+    if not request.user.is_authenticated:
+        if "fecha_inicio" in request.session:
+            del request.session["fecha_inicio"]
+        if "contador_visitas" in request.session:
+            del request.session["contador_visitas"]
+        if "rol_usuario" in request.session:
+            del request.session["rol_usuario"]
+        if "usuario_actual" in request.session:
+            del request.session["usuario_actual"]
+        # 1. Fecha de inicio de sesión
+    else:
+        if "fecha_inicio" not in request.session:
+            request.session["fecha_inicio"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 2. Contador de visitas
+        if "contador_visitas" not in request.session:
+            request.session["contador_visitas"] = 1
+        else:
+            request.session["contador_visitas"] += 1
+        # 3. Rol del usuario
+        if request.user.is_authenticated: 
+            request.session["rol_usuario"] = request.user.get_rol_display()
+        else:
+            request.session["rol_usuario"] = "Sin grupo"
+        # 4. Nombre del usuario que ha renderizado la página
+        request.session["usuario_actual"] = request.user.username
     
     return render(request, 'componentes/home.html', {})
 

@@ -4,10 +4,18 @@
     <h1>Este es el home de nuestro Proyecto</h1>
     <p><a href="{% url 'product_list' %}">Lista de productos</a></p>
     <p><a href="{% url 'manufacturers_list' %}">Lista de fabricantes</a></p>
-    <p><a href="{% url 'customer_list' %}">Lista de clientes</a></p>
-    <p><a href="{% url 'category_list' %}">Lista de categorías</a></p>
-    <p><a href="{% url 'order_list' %}">Lista de pedidos</a></p>
-    <p><a href="{% url 'profile_list' %}">Lista de perfiles</a></p>
+    {% if perms.componentes.view_customer %}
+        <p><a href="{% url 'customer_list' %}">Lista de clientes</a></p>
+    {% endif %}
+    {% if perms.componentes.view_category %}
+        <p><a href="{% url 'category_list' %}">Lista de categorías</a></p>
+    {% endif %}
+    {% if perms.componentes.view_order %}
+        <p><a href="{% url 'order_list' %}">Lista de pedidos</a></p>
+    {% endif %}
+    {% if perms.componentes.view_profile %}
+        <p><a href="{% url 'profile_list' %}">Lista de perfiles</a></p>
+    {% endif %}
     <p><a href="{% url 'product_by_sku' sku='ABC-123' %}">Buscar producto por SKU</a></p>
     <p><a href="{% url 'products_by_category' slug='componentes' %}">Productos por categoría</a></p>
     <p><a href="{% url 'manufacturers_by_year_month' year=2009 month=7 %}">Fabricantes por año y mes</a></p>
@@ -16,24 +24,48 @@
     <p><a href="{% url 'products_never_ordered' %}">Productos nunca pedidos</a></p>
     <p><a href="{% url 'dame_fabricantes' 'Require' %}">Buscar fabricantes con texto "Require"</a></p>
     <p><a href="{% url 'dame_fabricantes' 'martin' %}">Buscar fabricantes con texto "martin"</a></p>
-    {% if perms.componentes.add_product %}
-    <p><a href="{% url 'producto_create' %}">Crear nuevo producto</a></p> 
-    {% endif %}  
-    <p><a href="{% url 'fabricante_create' %}">Crear nuevo fabricante</a></p>    
-    <p><a href="{% url 'cliente_create' %}">Crear nuevo cliente</a></p>
-    <p><a href="{% url 'category_create' %}">Crear nueva categoría</a></p>
-    <p><a href="{% url 'order_create' %}">Crear nuevo pedido</a></p>
-    <p><a href="{% url 'profile_create' %}">Crear nuevo perfil</a></p>
 
-    <p><a href="{% url 'producto_busqueda_avanzada' %}">Búsqueda avanzada de productos</a></p>
-    <p><a href="{% url 'fabricante_busqueda_avanzada' %}">Búsqueda avanzada de fabricantes</a></p>
-    <p><a href="{% url 'cliente_busqueda_avanzada' %}">Búsqueda avanzada de clientes</a></p>
-    <p><a href="{% url 'categoria_busqueda_avanzada' %}">Búsqueda avanzada de categorías</a></p>
-    <p><a href="{% url 'pedido_busqueda_avanzada' %}">Búsqueda avanzada de pedidos</a></p>
-    <p><a href="{% url 'perfil_busqueda_avanzada' %}">Búsqueda avanzada de perfiles</a></p>
+    {% if request.user.is_authenticated %}
+        {% if perms.componentes.add_product %}
+            <p><a href="{% url 'producto_create' %}">Crear nuevo producto</a></p> 
+        {% endif %}  
+        {% if perms.componentes.add_manufacturer %}
+            <p><a href="{% url 'fabricante_create' %}">Crear nuevo fabricante</a></p> 
+        {% endif %}  
+        {% if perms.componentes.add_customer %}
+            <p><a href="{% url 'cliente_create' %}">Crear nuevo cliente</a></p> 
+        {% endif %}  
+        {% if perms.componentes.add_category %}
+            <p><a href="{% url 'category_create' %}">Crear nueva categoría</a></p> 
+        {% endif %}  
+        {% if perms.componentes.add_order %}
+            <p><a href="{% url 'order_create' %}">Crear nuevo pedido</a></p> 
+        {% endif %}  
+        {% if perms.componentes.add_profile %}
+            <p><a href="{% url 'profile_create' %}">Crear nuevo perfil</a></p> 
+        {% endif %}
 
-    <p><a href="{% url 'registrar_usuario' %}">Registrar nuevo usuario</a></p>
-    <p><a href="{% url 'lista_documentos' %}">Lista de documentos</a></p>
+        {% if perms.componentes.view_product %}
+            <p><a href="{% url 'producto_busqueda_avanzada' %}">Búsqueda avanzada de productos</a></p>
+        {% endif %}
+        {% if perms.componentes.view_manufacturer %}
+            <p><a href="{% url 'fabricante_busqueda_avanzada' %}">Búsqueda avanzada de fabricantes</a></p>
+        {% endif %}
+        {% if perms.componentes.view_customer %}
+            <p><a href="{% url 'cliente_busqueda_avanzada' %}">Búsqueda avanzada de clientes</a></p>
+        {% endif %}
+        {% if perms.componentes.view_category %}
+            <p><a href="{% url 'categoria_busqueda_avanzada' %}">Búsqueda avanzada de categorías</a></p>
+        {% endif %}
+        {% if perms.componentes.view_order %}
+            <p><a href="{% url 'pedido_busqueda_avanzada' %}">Búsqueda avanzada de pedidos</a></p>
+        {% endif %}
+        {% if perms.componentes.view_profile %}
+            <p><a href="{% url 'perfil_busqueda_avanzada' %}">Búsqueda avanzada de perfiles</a></p>
+        {% endif %}
+
+        <p><a href="{% url 'lista_documentos' %}">Lista de documentos</a></p>
+    {% endif %}
 
     <div class="ml-2">
     {% if not request.user.is_authenticated %}
@@ -49,6 +81,10 @@
     {% endif %}
 
     {% if request.user.is_authenticated %}
+        {#mensaje de bienvenida#}
+        <span class="navbar-text m-3">
+            Bienvenido, {{ user.username }}!
+        </span>
         <form action="{% url 'logout' %}" class="d-flex m-3" role="search" method="POST">
             {% csrf_token %}
             <button class="btn btn-light btn-outline-dark" type="submit">

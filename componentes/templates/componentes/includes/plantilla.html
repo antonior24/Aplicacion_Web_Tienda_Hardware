@@ -26,6 +26,9 @@
     {% block cabecera %}
     {% endblock cabecera %}
     <p>{{request.session.fecha_inicio}}</p>
+    <p>Visitas: {{request.session.contador_visitas}}</p>
+    <p>Rol: {{request.session.rol_usuario}}</p>
+    <p>Renderizado por: {{request.session.usuario_actual}}</p>
     <footer>
     {% include "componentes/includes/footer.html" %}
     </footer>
