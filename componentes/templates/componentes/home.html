@@ -65,6 +65,7 @@
         {% endif %}
 
         <p><a href="{% url 'lista_documentos' %}">Lista de documentos</a></p>
+        <p><a href="{% url 'order_create_generico_con_request' %}">Crear nuevo pedido con usuario</a></p>
     {% endif %}
 
     <div class="ml-2">
@@ -72,6 +73,7 @@
         <a class="btn btn-outline-warning" href="{% url 'login' %}">
             Login
         </a>
+        
     {% endif %}
 
     {% if not request.user.is_authenticated %}

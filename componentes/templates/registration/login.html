@@ -9,4 +9,10 @@
 
     {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
 </form>
+{# ENLACE NUEVO: reinicio de contraseña #}
+        <p>
+            <a href="{% url 'password_reset' %}">
+                ¿Has olvidado tu contraseña?
+            </a>
+        </p>
 {% endblock %}

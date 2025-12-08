@@ -5,7 +5,7 @@ from django.shortcuts import render
 from .models import Documento, Product, Manufacturer, Category, ProductCategory, Customer, CompanyInfo, Order, OrderItem, Profile, User, Dependiente
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found, server_error, permission_denied, bad_request
-from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm, RegistroForm, DocumentoForm
+from componentes.forms import ProductoBuscarForm, ProductoForm, ManufacturerForm, CustomerForm, CategoryForm, ProductoBusquedaAvanzadaForm, OrderForm, FabricanteBusquedaAvanzadaForm, ClienteBusquedaAvanzadaForm, CategoriaBusquedaAvanzadaForm, PedidoBusquedaAvanzadaForm, ProfileForm, PerfilBusquedaAvanzadaForm, RegistroForm, DocumentoForm, OrderFormRequest
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth import login
@@ -634,6 +634,12 @@ def categoria_busqueda_avanzada(request):
 @permission_required('componentes.view_order')
 def pedido_busqueda_avanzada(request):
     QSorders = Order.objects.all()
+    #filtro segun el usuario logeado
+    if request.user.is_authenticated and request.user.rol == User.CLIENTE:
+        customer_usuario = Customer.objects.filter(user=request.user).first()
+        if customer_usuario is not None:
+            QSorders = QSorders.filter(customer=customer_usuario)
+    
     if (len(request.GET) > 0):
         formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(request.GET)
         if (formulario_busqueda_avanzada.is_valid()):
@@ -979,6 +985,35 @@ def subir_documento(request):
 def lista_documentos(request):
     documentos = Documento.objects.all()
     return render(request, 'componentes/lista_documentos.html', {'documentos': documentos})
+
+def order_create_generico_con_request(request):
+    datosorder= None
+    if request.method == 'POST':
+        datosorder = request.POST
+        
+    formulario_o = OrderFormRequest(datosorder, request=request)
+    
+    if (request.method == 'POST'):
+        formulario_creado = order_crear(formulario_o)
+        if (formulario_creado):
+            messages.success(request, 'Pedido creado correctamente.')
+            return redirect('order_list_usuario', usuario_id=request.user.id)
+    
+    return render(request, 'componentes/crear_pedido.html', {'formulario_o': formulario_o})
+
+#def prestamo_lista_usuario(request,usuario_id):
+ #   cliente = Cliente.objects.filter(id=usuario_id).get()
+  #  prestamos = Prestamo.objects.select_related("libro")
+   # prestamos = prestamos.filter(cliente=cliente.id).all()
+    #return render(request, 'prestamo/lista.html',{"prestamos_mostrar":prestamos,"cliente":cliente})
+#Siguiendo este ejemplo, hacemos el filtro de orders por el customer asociado al user que hace la petición
+@permission_required('componentes.view_order')
+def order_list_usuario(request,usuario_id):
+    customer = Customer.objects.filter(user__id=usuario_id).get()
+    ordenes = Order.objects.select_related("customer")
+    ordenes = ordenes.filter(customer=customer.id).all()
+    return render(request, 'componentes/order_list.html',{"ordenes_mostrar":ordenes,"customer":customer})
+    
 
 def mi_error_404(request, exception=None):
     return render(request, 'componentes/errores/404.html', None, None, 404)

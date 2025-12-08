@@ -119,6 +119,14 @@ class Order(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     products = models.ManyToManyField(Product, through='OrderItem', related_name='orders')
+    
+    # NUEVO: usuario que crea el pedido
+    #En los formularios de crear debe incluirse siempre el usuario 
+    # que crea dicho registro por la sesión del usuario. 
+    created_by = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, null=True, blank=True, 
+        related_name='created_orders')
 
     def __str__(self):
         return f"Order #{self.id} - {self.customer}"

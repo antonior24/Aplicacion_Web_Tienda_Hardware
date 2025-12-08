@@ -389,5 +389,19 @@ class OrderFormRequest(OrderForm):
             queryset=productos_disponibles,
             widget=forms.CheckboxSelectMultiple,
             required=True,
-            empty_label="Ninguno"
         )
+        #  Controlar el campo 'customer' según el rol CONSULTAR CON EL PROFESOR
+        if self.request.user.is_authenticated:
+            usuario = self.request.user
+
+            # Si es CLIENTE: fijamos su Customer y ocultamos el campo
+            if usuario.rol == User.CLIENTE:
+                customer_qs = Customer.objects.filter(user=usuario)
+                if customer_qs.exists():
+                    self.fields["customer"].queryset = customer_qs
+                    self.fields["customer"].initial = customer_qs.first()
+                self.fields["customer"].widget = forms.HiddenInput()
+
+            # Si es DEPENDIENTE: dejamos el select normal (puede elegir cualquier cliente)
+            elif usuario.rol == User.DEPENDIENTE:
+                self.fields["customer"].queryset = Customer.objects.all()

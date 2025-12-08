@@ -58,4 +58,9 @@ urlpatterns = [
     # Subida de documentos
     path('documento/subir/', views.subir_documento, name='subir_documento'),
     path('documentos/', views.lista_documentos, name='lista_documentos'),
+    
+    # Create Order with user association
+    path('order/crear_con_usuario/', views.order_create_generico_con_request, name='order_create_generico_con_request'),
+    # lista de pedidos con usuario asociado
+    path('orders/con_usuario/<int:usuario_id>/', views.order_list_usuario, name='order_list_usuario'),
 ]
