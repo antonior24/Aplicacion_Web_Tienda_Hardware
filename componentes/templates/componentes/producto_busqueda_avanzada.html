@@ -6,7 +6,7 @@
 
 {% block cabecera %}
   <h2>Buscar Producto</h2>
-  <form method="get">
+  <form method="get" action="{% url 'producto_busqueda_avanzada' %}"> {# Falta poner dentro del form action= "{% url 'producto_busqueda_avanzada'%}" #}
     {% csrf_token %}
    {% bootstrap_form formulario_busqueda_avanzada%}
     <button type="submit">Buscar Producto</button>

@@ -287,11 +287,24 @@ class CategoriaBusquedaAvanzadaForm(forms.Form):
 
 #Busqueda avanzada de pedidos
 class PedidoBusquedaAvanzadaForm(forms.Form):
+    #si estoy logueado como cliente, no muestro el campo customer
     customer = forms.ModelChoiceField(queryset=Customer.objects.all(), required=False)
     status = forms.ChoiceField(choices=[('', '---------')] + list(Order.STATUS_CHOICES), required=False)
     total_min = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
     total_max = forms.DecimalField(required=False, max_digits=10, decimal_places=2)
     products = forms.ModelMultipleChoiceField(queryset=Product.objects.all(), required=False, widget=forms.CheckboxSelectMultiple)
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        # 🟦 Si el usuario está logueado como cliente → ocultamos el campo como hidden
+        if user and user.is_authenticated and user.rol == User.CLIENTE:
+            customer_qs = Customer.objects.filter(user=user)
+            if customer_qs.exists():
+                self.fields["customer"].queryset = customer_qs
+                self.fields["customer"].initial = customer_qs.first()
+            self.fields["customer"].widget = forms.HiddenInput()
     
     def clean(self):
         cleaned_data = super().clean()

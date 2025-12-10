@@ -636,16 +636,17 @@ def pedido_busqueda_avanzada(request):
     QSorders = Order.objects.all()
     #filtro segun el usuario logeado
     if request.user.is_authenticated and request.user.rol == User.CLIENTE:
-        customer_usuario = Customer.objects.filter(user=request.user).first()
+        customer_usuario = Customer.objects.filter(user=request.user).first() # obtener el customer asociado al usuario
         if customer_usuario is not None:
             QSorders = QSorders.filter(customer=customer_usuario)
     
     if (len(request.GET) > 0):
-        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(request.GET)
+        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(request.GET, user=request.user)
         if (formulario_busqueda_avanzada.is_valid()):
             mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
             #obtenemos los filtros
-            customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
+            if request.user.rol == User.CLIENTE: 
+                customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
             status = formulario_busqueda_avanzada.cleaned_data.get('status')
             total_min = formulario_busqueda_avanzada.cleaned_data.get('total_min')
             total_max = formulario_busqueda_avanzada.cleaned_data.get('total_max')
@@ -679,7 +680,7 @@ def pedido_busqueda_avanzada(request):
             orders_encontrados = QSorders.all()
     else:
         orders_encontrados = QSorders.all()
-        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(None)
+        formulario_busqueda_avanzada = PedidoBusquedaAvanzadaForm(None, user=request.user) # pasar el usuario al formulario
     return render(request, 'componentes/pedido_busqueda_avanzada.html', {
         'formulario_busqueda_avanzada': formulario_busqueda_avanzada,
         'pedidos': orders_encontrados,
@@ -1009,9 +1010,14 @@ def order_create_generico_con_request(request):
 #Siguiendo este ejemplo, hacemos el filtro de orders por el customer asociado al user que hace la petición
 @permission_required('componentes.view_order')
 def order_list_usuario(request,usuario_id):
-    customer = Customer.objects.filter(user__id=usuario_id).get()
-    ordenes = Order.objects.select_related("customer")
-    ordenes = ordenes.filter(customer=customer.id).all()
+    if request.user.rol == User.CLIENTE: 
+        customer = Customer.objects.filter(user__id=usuario_id).get()
+        ordenes = Order.objects.select_related("customer")
+        ordenes = ordenes.filter(customer=customer.id).all()
+    else:
+        customer = Customer.objects.all()
+        ordenes = Order.objects.select_related("customer").all()
+   
     return render(request, 'componentes/order_list.html',{"ordenes_mostrar":ordenes,"customer":customer})
     
 
