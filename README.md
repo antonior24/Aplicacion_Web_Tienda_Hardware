@@ -1,85 +1,94 @@
 # Aplicacion_Web_Tienda_Hardware
 Hay que hacer loaddata de datos_urls.json
-
+1. Template Tags
+    
+    1- En la plantilla producto.html
+   
+        {% for categoria in productos.categories.all %}
+            <li>{{ categoria.name }}</li>
+            <li><a href="{% url 'products_by_category' categoria.slug %}">Ver más en esta categoría</a></li>
+        {% empty %} {# Template tag empty 1 #}
+            <li>Este producto no tiene categorías asignadas.</li> 
+        {% endfor %}
 Tipos de usuario y permisos de acceso
 
 La aplicación cuenta con dos tipos de usuario, excluyendo al administrador de Django:
 
-Usuario Cliente
+  Usuario Cliente
 
 Usuario final de la tienda. Sus funcionalidades están limitadas a la consulta y gestión de su propia información.
 
-Puede acceder a:
+  Puede acceder a:
 
-  Ver el catálogo de productos, categorías y fabricantes.
+    Ver el catálogo de productos, categorías y fabricantes.
+  
+    Ver el detalle de productos.
+  
+    Crear pedidos solo para sí mismo.
+  
+    Seleccionar productos disponibles en sus pedidos.
+  
+    Ver únicamente sus propios pedidos.
+  
+    Usar la búsqueda avanzada de pedidos filtrada automáticamente por su usuario.
+  
+    Editar sus propios datos de cliente y perfil.
+  
+    Iniciar sesión, cerrar sesión y restablecer su contraseña.
 
-  Ver el detalle de productos.
+  No puede acceder a:
 
-  Crear pedidos solo para sí mismo.
-
-  Seleccionar productos disponibles en sus pedidos.
-
-  Ver únicamente sus propios pedidos.
-
-  Usar la búsqueda avanzada de pedidos filtrada automáticamente por su usuario.
-
-  Editar sus propios datos de cliente y perfil.
-
-  Iniciar sesión, cerrar sesión y restablecer su contraseña.
-
-No puede acceder a:
-
-  Crear, editar o eliminar productos.
-
-  Crear, editar o eliminar categorías o fabricantes.
-
-  Ver ni gestionar otros clientes.
-
-  Ver ni gestionar pedidos de otros usuarios.
-
-  Acceder a funcionalidades de administración.
+    Crear, editar o eliminar productos.
+  
+    Crear, editar o eliminar categorías o fabricantes.
+  
+    Ver ni gestionar otros clientes.
+  
+    Ver ni gestionar pedidos de otros usuarios.
+  
+    Acceder a funcionalidades de administración.
 
   Usuario Dependiente
 
 Usuario interno de la tienda encargado de la gestión.
 
-Puede acceder a:
+  Puede acceder a:
 
-  Ver, crear, editar y eliminar productos.
-
-  Ver, crear, editar y eliminar categorías.
-
-  Ver, crear, editar y eliminar fabricantes.
-
-  Ver todos los clientes y sus perfiles.
-
-  Crear pedidos para cualquier cliente.
-
-  Ver y gestionar todos los pedidos.
-
-  Usar búsquedas avanzadas sin restricciones por usuario.
-
-  Gestionar documentos e información interna de la aplicación.
-
-  Iniciar sesión, cerrar sesión y restablecer su contraseña.
+    Ver, crear, editar y eliminar productos.
+  
+    Ver, crear, editar y eliminar categorías.
+  
+    Ver, crear, editar y eliminar fabricantes.
+  
+    Ver todos los clientes y sus perfiles.
+  
+    Crear pedidos para cualquier cliente.
+  
+    Ver y gestionar todos los pedidos.
+  
+    Usar búsquedas avanzadas sin restricciones por usuario.
+  
+    Gestionar documentos e información interna de la aplicación.
+  
+    Iniciar sesión, cerrar sesión y restablecer su contraseña.
 
 No puede acceder a:
 
-  Funciones exclusivas del administrador de Django (panel admin).
+    Funciones exclusivas del administrador de Django (panel admin).
 
-🔐 Control de acceso
+Control de acceso
 
   El acceso a vistas y acciones está controlado mediante:
 
-  Autenticación (user.is_authenticated)
-
-  Permisos de Django (@permission_required y perms.componentes.*)
-
-  Los formularios y vistas muestran u ocultan funcionalidades según el rol del usuario.
-
-  Los clientes solo pueden ver y gestionar información asociada a su propio usuario.
-
-  Los dependientes tienen acceso completo a la gestión de la aplicación.
+    Autenticación (user.is_authenticated)
+  
+    Permisos de Django (@permission_required y perms.componentes.*)
+  
+    Los formularios y vistas muestran u ocultan funcionalidades según el rol del usuario.
+  
+    Los clientes solo pueden ver y gestionar información asociada a su propio usuario.
+  
+    Los dependientes tienen acceso completo a la gestión de la aplicación.
 
 Validaciones implementadas en componentes/forms.py
 
