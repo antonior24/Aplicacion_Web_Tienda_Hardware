@@ -637,7 +637,7 @@ def pedido_busqueda_avanzada(request):
     #filtro segun el usuario logeado
     if request.user.is_authenticated and request.user.rol == User.CLIENTE:
         customer_usuario = Customer.objects.filter(user=request.user).first() # obtener el customer asociado al usuario
-        if customer_usuario is not None:
+        if customer_usuario is not None: # esto evita errores si no hay customer asociado
             QSorders = QSorders.filter(customer=customer_usuario)
     
     if (len(request.GET) > 0):
@@ -645,8 +645,7 @@ def pedido_busqueda_avanzada(request):
         if (formulario_busqueda_avanzada.is_valid()):
             mensaje_busqueda = "Resultados de la búsqueda avanzada:\n"
             #obtenemos los filtros
-            if request.user.rol == User.CLIENTE: 
-                customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
+            customer = formulario_busqueda_avanzada.cleaned_data.get('customer')
             status = formulario_busqueda_avanzada.cleaned_data.get('status')
             total_min = formulario_busqueda_avanzada.cleaned_data.get('total_min')
             total_max = formulario_busqueda_avanzada.cleaned_data.get('total_max')
@@ -953,7 +952,7 @@ def registrar_usuario(request):
                     first_name=usuario.first_name or usuario.username,
                     last_name=usuario.last_name or '',
                     email=usuario.email or '',
-                    phone='',
+                    phone=form.cleaned_data.get('phone') or '',
                 )
                 cliente.save()
             elif (rol == User.DEPENDIENTE):
