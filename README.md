@@ -1,15 +1,6 @@
 # Aplicacion_Web_Tienda_Hardware
 Hay que hacer loaddata de datos_urls.json
-1. Template Tags
-    
-    1- En la plantilla producto.html
-   
-        {% for categoria in productos.categories.all %}
-            <li>{{ categoria.name }}</li>
-            <li><a href="{% url 'products_by_category' categoria.slug %}">Ver más en esta categoría</a></li>
-        {% empty %} {# Template tag empty 1 #}
-            <li>Este producto no tiene categorías asignadas.</li> 
-        {% endfor %}
+
 Tipos de usuario y permisos de acceso
 
 La aplicación cuenta con dos tipos de usuario, excluyendo al administrador de Django:
