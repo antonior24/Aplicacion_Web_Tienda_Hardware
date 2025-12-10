@@ -1,5 +1,31 @@
 [
 {
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2025-12-09T08:52:02.006",
+        "user": 3,
+        "content_type": 3,
+        "object_id": "1",
+        "object_repr": "Clientes",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2025-12-09T08:56:18.086",
+        "user": 3,
+        "content_type": 3,
+        "object_id": "2",
+        "object_repr": "Dependientes",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
     "model": "auth.permission",
     "pk": 1,
     "fields": {
@@ -183,36 +209,36 @@
     "model": "auth.permission",
     "pk": 21,
     "fields": {
-        "name": "Can add customer",
+        "name": "Can add documento",
         "content_type": 6,
-        "codename": "add_customer"
+        "codename": "add_documento"
     }
 },
 {
     "model": "auth.permission",
     "pk": 22,
     "fields": {
-        "name": "Can change customer",
+        "name": "Can change documento",
         "content_type": 6,
-        "codename": "change_customer"
+        "codename": "change_documento"
     }
 },
 {
     "model": "auth.permission",
     "pk": 23,
     "fields": {
-        "name": "Can delete customer",
+        "name": "Can delete documento",
         "content_type": 6,
-        "codename": "delete_customer"
+        "codename": "delete_documento"
     }
 },
 {
     "model": "auth.permission",
     "pk": 24,
     "fields": {
-        "name": "Can view customer",
+        "name": "Can view documento",
         "content_type": 6,
-        "codename": "view_customer"
+        "codename": "view_documento"
     }
 },
 {
@@ -327,36 +353,36 @@
     "model": "auth.permission",
     "pk": 37,
     "fields": {
-        "name": "Can add cliente",
+        "name": "Can add customer",
         "content_type": 10,
-        "codename": "add_cliente"
+        "codename": "add_customer"
     }
 },
 {
     "model": "auth.permission",
     "pk": 38,
     "fields": {
-        "name": "Can change cliente",
+        "name": "Can change customer",
         "content_type": 10,
-        "codename": "change_cliente"
+        "codename": "change_customer"
     }
 },
 {
     "model": "auth.permission",
     "pk": 39,
     "fields": {
-        "name": "Can delete cliente",
+        "name": "Can delete customer",
         "content_type": 10,
-        "codename": "delete_cliente"
+        "codename": "delete_customer"
     }
 },
 {
     "model": "auth.permission",
     "pk": 40,
     "fields": {
-        "name": "Can view cliente",
+        "name": "Can view customer",
         "content_type": 10,
-        "codename": "view_cliente"
+        "codename": "view_customer"
     }
 },
 {
@@ -648,39 +674,62 @@
     }
 },
 {
-    "model": "auth.permission",
-    "pk": 73,
+    "model": "auth.group",
+    "pk": 1,
     "fields": {
-        "name": "Can add documento",
-        "content_type": 19,
-        "codename": "add_documento"
+        "name": "Clientes",
+        "permissions": [
+            36,
+            48,
+            38,
+            40,
+            24,
+            28,
+            49,
+            52,
+            56,
+            66,
+            68
+        ]
     }
 },
 {
-    "model": "auth.permission",
-    "pk": 74,
+    "model": "auth.group",
+    "pk": 2,
     "fields": {
-        "name": "Can change documento",
-        "content_type": 19,
-        "codename": "change_documento"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 75,
-    "fields": {
-        "name": "Can delete documento",
-        "content_type": 19,
-        "codename": "delete_documento"
-    }
-},
-{
-    "model": "auth.permission",
-    "pk": 76,
-    "fields": {
-        "name": "Can view documento",
-        "content_type": 19,
-        "codename": "view_documento"
+        "name": "Dependientes",
+        "permissions": [
+            33,
+            34,
+            35,
+            36,
+            46,
+            48,
+            37,
+            38,
+            39,
+            40,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            65,
+            66,
+            67,
+            68
+        ]
     }
 },
 {
@@ -728,7 +777,7 @@
     "pk": 6,
     "fields": {
         "app_label": "componentes",
-        "model": "customer"
+        "model": "documento"
     }
 },
 {
@@ -760,7 +809,7 @@
     "pk": 10,
     "fields": {
         "app_label": "componentes",
-        "model": "cliente"
+        "model": "customer"
     }
 },
 {
@@ -828,71 +877,27 @@
     }
 },
 {
-    "model": "contenttypes.contenttype",
-    "pk": 19,
-    "fields": {
-        "app_label": "componentes",
-        "model": "documento"
-    }
-},
-{
     "model": "sessions.session",
-    "pk": "8coi200kfkffht84w6o9duf42nf1wtjp",
+    "pk": "7hq1j7cm5p7way8js36jebxl5q46zg9j",
     "fields": {
-        "session_data": ".eJxVjDsOwyAQBa8SUUeIsBC8Lt3nDIjPEkgikPypotw9WHLjdmbe-7JEITtbagmlsZEJuEgxChhhYFdm3bZmuy002xK7VWfmXXhT3UV8ufpsPLS6zsXzPeGHXfijRfpMR3s6yG7JfZ0GA-qugDxFVIpQB0BPiFJpJEM-QCcpRaEFmCBlZ7cUIxqjvUPHfn_AWEBC:1vQs9C:u0N6rF5CbrG5clazAo_VxroC7SQr-lppHLI6CXT0VA0",
-        "expire_date": "2025-12-17T20:04:18.754"
-    }
-},
-{
-    "model": "componentes.documento",
-    "pk": 1,
-    "fields": {
-        "titulo": "gta",
-        "imagen": "imagenes/Captura_desde_2025-12-01_18-53-43.png",
-        "archivo": ""
-    }
-},
-{
-    "model": "componentes.documento",
-    "pk": 2,
-    "fields": {
-        "titulo": "olis",
-        "imagen": "",
-        "archivo": "archivos/views.py"
-    }
-},
-{
-    "model": "componentes.documento",
-    "pk": 3,
-    "fields": {
-        "titulo": "lala",
-        "imagen": "imagenes/Captura_desde_2025-11-13_20-01-50.png",
-        "archivo": ""
-    }
-},
-{
-    "model": "componentes.documento",
-    "pk": 4,
-    "fields": {
-        "titulo": "pruebainmg",
-        "imagen": "imagenes/Captura_desde_2025-11-06_02-26-22.png",
-        "archivo": ""
+        "session_data": ".eJxVjsFOxSAURH_FsH6vobQU6PK59hvIhXuxaAMJUDfGf5eamuhuMnNmMp_MwtE2e1QqNiJb2cxufz0H_p3SGeAbpNc8-JxaiW44keFK6_CSkfbHxf4b2KBuvQ1u0aD8REYgOTMvSruJQxAYRqmUIKFHlNNMrqugvUQ1Gcm1BBUQPO-jgfwGNqboY-6Lggt5H8WdmyduVrmsfOnQeQ8wF_sRa2xQ2apurOS9nzmg_BSf90ipUYcvz4JvB-w9-oW-vgEBLlub:1vSuGH:zgXw5q-X2PIUrldi5UZ9wkjO2E-vYge4w80Qahmfzg4",
+        "expire_date": "2025-12-23T10:44:01.122"
     }
 },
 {
     "model": "componentes.user",
     "pk": 1,
     "fields": {
-        "password": "pbkdf2_sha256$870000$P1WvFo6kerwA1ctyMafEZm$xs5Q/B4tbzelg8Iv8DAz1SmOaOo8LXXyXIOtLLy/CvA=",
-        "last_login": "2025-12-02T17:50:58.803",
+        "password": "pbkdf2_sha256$870000$qQTp4ah7aaZQPcQbeAO1uO$Giwa2lZR/xxtj79SLyaL5ikZbGF1nxCIVTVSJmcaMGM=",
+        "last_login": "2025-12-09T08:57:01.986",
         "is_superuser": false,
         "username": "antonio",
         "first_name": "",
         "last_name": "",
-        "email": "antonioromeroostos@gmail.com",
+        "email": "aa22a@gm.com",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2025-12-02T17:50:58.249",
+        "date_joined": "2025-12-09T08:38:54.264",
         "rol": 2,
         "groups": [],
         "user_permissions": []
@@ -902,8 +907,27 @@
     "model": "componentes.user",
     "pk": 2,
     "fields": {
-        "password": "pbkdf2_sha256$870000$mmzf5o1hKMiKbSomJPYeb6$7lFeD6mYkWS5HIc/fgeeTcOGGEeovuLVYIJLfmbz/OA=",
-        "last_login": "2025-12-02T17:52:14.516",
+        "password": "pbkdf2_sha256$870000$EOEmDvdXfbNaNHzEeMchpw$E3xGtb0PdjJb0xmhkA1s3VcRyQDbkrUpus9+wqFA/r8=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "antonio2",
+        "first_name": "",
+        "last_name": "",
+        "email": "aa22a@gm.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-12-09T08:39:24.165",
+        "rol": 2,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "componentes.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$1lW9uDctwC6Hzxsg9F2H6C$FO3omlmjuOf58gsd7Bhv8Vr7oAl8UsGzbe2QOV3DeTE=",
+        "last_login": "2025-12-09T08:57:24.089",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
@@ -911,27 +935,8 @@
         "email": "ad@gm.com",
         "is_staff": true,
         "is_active": true,
-        "date_joined": "2025-12-02T17:51:52.267",
+        "date_joined": "2025-12-09T08:44:25.457",
         "rol": 1,
-        "groups": [],
-        "user_permissions": []
-    }
-},
-{
-    "model": "componentes.user",
-    "pk": 3,
-    "fields": {
-        "password": "pbkdf2_sha256$870000$bYGCbA4w6ubomBDlthiWsu$hwSSCjgfS91av5Pf3fnVaHgn4KcAd7dh2STr3RGnJtQ=",
-        "last_login": "2025-12-03T20:02:55.617",
-        "is_superuser": false,
-        "username": "antonio3",
-        "first_name": "",
-        "last_name": "",
-        "email": "antonio.romero.ostos.al@iespoligonosur.org",
-        "is_staff": false,
-        "is_active": true,
-        "date_joined": "2025-12-03T20:02:00.192",
-        "rol": 2,
         "groups": [],
         "user_permissions": []
     }
@@ -940,18 +945,62 @@
     "model": "componentes.user",
     "pk": 4,
     "fields": {
-        "password": "pbkdf2_sha256$870000$yeHG9zasoevyrs5ZFZYlEp$kazu7creB37gvK6vXs7JEz4Z3ZI3xriKArTUaYMzncw=",
-        "last_login": "2025-12-03T20:04:18.695",
+        "password": "pbkdf2_sha256$870000$mnW2qjdJFJG0ig6aW4x8dH$ZgCBSF7PCJRcboDgetUnXohffTa64fgq08SuSGy2m/I=",
+        "last_login": "2025-12-09T09:56:06.200",
         "is_superuser": false,
-        "username": "antonio2",
+        "username": "usuario",
         "first_name": "",
         "last_name": "",
-        "email": "antonio.romero.ostos.al@iespoligonosur.org",
+        "email": "aaa@gm.com",
         "is_staff": false,
         "is_active": true,
-        "date_joined": "2025-12-03T20:03:56.752",
+        "date_joined": "2025-12-09T08:58:07.152",
+        "rol": 2,
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "componentes.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$rnM9AUrtJQvwbUy8OwN2jI$588ZfFIM1vChImYOmSUxFhktGYTAzNpGJBxcHiac82s=",
+        "last_login": "2025-12-09T09:06:29.383",
+        "is_superuser": false,
+        "username": "antonio22",
+        "first_name": "",
+        "last_name": "",
+        "email": "aa22a@gm.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-12-09T08:58:39.576",
+        "rol": 2,
+        "groups": [
+            1
+        ],
+        "user_permissions": []
+    }
+},
+{
+    "model": "componentes.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$870000$ykpk4caIiWnmqsHCFMMKP8$KagM4IbPXCKhFzl5frVuWC3ly/a7M4R8aaDtjQqHU44=",
+        "last_login": "2025-12-09T09:54:52.260",
+        "is_superuser": false,
+        "username": "dependiente",
+        "first_name": "",
+        "last_name": "",
+        "email": "dep@gm.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-12-09T09:00:12.769",
         "rol": 3,
-        "groups": [],
+        "groups": [
+            2
+        ],
         "user_permissions": []
     }
 },
@@ -959,40 +1008,16 @@
     "model": "componentes.dependiente",
     "pk": 1,
     "fields": {
-        "user": 4
-    }
-},
-{
-    "model": "componentes.cliente",
-    "pk": 1,
-    "fields": {
-        "user": 1
-    }
-},
-{
-    "model": "componentes.cliente",
-    "pk": 2,
-    "fields": {
-        "user": 3
+        "user": 6
     }
 },
 {
     "model": "componentes.manufacturer",
     "pk": 1,
     "fields": {
-        "name": "fabricante1",
+        "name": "fab2",
         "website": "http://vaughn.com/apppost.jsp",
         "established": "2000-03-12",
-        "active": true
-    }
-},
-{
-    "model": "componentes.manufacturer",
-    "pk": 3,
-    "fields": {
-        "name": "prueba fabrucante",
-        "website": "https://tusitio.com/thankyou.html",
-        "established": "2000-12-12",
         "active": true
     }
 },
@@ -1001,29 +1026,19 @@
     "pk": 1,
     "fields": {
         "name": "cat1",
-        "slug": "componentes",
-        "description": "asdasd",
+        "slug": "cs",
+        "description": "adsdasda",
         "parent": null
-    }
-},
-{
-    "model": "componentes.category",
-    "pk": 2,
-    "fields": {
-        "name": "categoriaejemplo",
-        "slug": "categoriaejempl",
-        "description": "categoriaejemplo",
-        "parent": 1
     }
 },
 {
     "model": "componentes.product",
     "pk": 1,
     "fields": {
-        "sku": "Far man in nothing.",
-        "name": "Producto13",
-        "description": "qweqwsda",
-        "price": "12.00",
+        "sku": "ABC-123",
+        "name": "Producto122",
+        "description": "adsdasdasdasdas",
+        "price": "112.00",
         "stock": 12,
         "manufacturer": 1
     }
@@ -1042,59 +1057,35 @@
     "model": "componentes.customer",
     "pk": 1,
     "fields": {
-        "first_name": "Juan",
-        "last_name": "Sarimiento",
-        "email": "antonioromeroostos1@gmail.com",
-        "phone": "xiaomi",
-        "wishlist": [
-            1
-        ]
+        "user": 4,
+        "first_name": "usuario",
+        "last_name": "",
+        "email": "aaa@gm.com",
+        "phone": "",
+        "wishlist": []
     }
 },
 {
     "model": "componentes.customer",
     "pk": 2,
     "fields": {
-        "first_name": "Juan",
-        "last_name": "Sarimiento",
-        "email": "antonioromer2oostos1@gmail.com",
-        "phone": "+34 980 54 76 89",
-        "wishlist": [
-            1
-        ]
+        "user": 5,
+        "first_name": "antonio22",
+        "last_name": "",
+        "email": "aa22a@gm.com",
+        "phone": "",
+        "wishlist": []
     }
 },
 {
-    "model": "componentes.customer",
-    "pk": 4,
-    "fields": {
-        "first_name": "Antonio",
-        "last_name": "Romero",
-        "email": "jose-ramonbeltran@example.org",
-        "phone": "+34 980 54 76 89",
-        "wishlist": [
-            1
-        ]
-    }
-},
-{
-    "model": "componentes.profile",
+    "model": "componentes.order",
     "pk": 1,
     "fields": {
-        "customer": 1,
-        "birth_date": null,
-        "newsletter": true,
-        "notes": "asdasd"
-    }
-},
-{
-    "model": "componentes.profile",
-    "pk": 2,
-    "fields": {
         "customer": 2,
-        "birth_date": "2007-12-03",
-        "newsletter": true,
-        "notes": ""
+        "created_at": "2025-12-09T09:05:57.327",
+        "status": "C",
+        "total": "12.00",
+        "created_by": null
     }
 },
 {
@@ -1102,19 +1093,21 @@
     "pk": 2,
     "fields": {
         "customer": 1,
-        "created_at": "2025-12-02T22:24:04.237",
+        "created_at": "2025-12-09T09:46:55.064",
         "status": "P",
-        "total": "0.02"
+        "total": "12.00",
+        "created_by": null
     }
 },
 {
     "model": "componentes.order",
     "pk": 3,
     "fields": {
-        "customer": 1,
-        "created_at": "2025-12-02T22:28:19.771",
-        "status": "X",
-        "total": "0.00"
+        "customer": 2,
+        "created_at": "2025-12-09T09:47:47.215",
+        "status": "C",
+        "total": "12.00",
+        "created_by": null
     }
 },
 {
@@ -1122,49 +1115,20 @@
     "pk": 4,
     "fields": {
         "customer": 1,
-        "created_at": "2025-12-02T22:29:18.439",
-        "status": "P",
-        "total": "0.00"
-    }
-},
-{
-    "model": "componentes.order",
-    "pk": 5,
-    "fields": {
-        "customer": 2,
-        "created_at": "2025-12-02T22:29:56.162",
+        "created_at": "2025-12-09T09:55:04.056",
         "status": "C",
-        "total": "0.01"
+        "total": "22222.00",
+        "created_by": null
     }
 },
 {
-    "model": "componentes.order",
-    "pk": 6,
+    "model": "componentes.orderitem",
+    "pk": 1,
     "fields": {
-        "customer": 2,
-        "created_at": "2025-12-02T22:30:56.769",
-        "status": "P",
-        "total": "0.01"
-    }
-},
-{
-    "model": "componentes.order",
-    "pk": 7,
-    "fields": {
-        "customer": 1,
-        "created_at": "2025-12-02T22:31:35.287",
-        "status": "P",
-        "total": "0.00"
-    }
-},
-{
-    "model": "componentes.order",
-    "pk": 8,
-    "fields": {
-        "customer": 2,
-        "created_at": "2025-12-03T19:39:48.858",
-        "status": "C",
-        "total": "12.00"
+        "order": 1,
+        "product": 1,
+        "quantity": 1,
+        "unit_price": "0.00"
     }
 },
 {
@@ -1192,46 +1156,6 @@
     "pk": 4,
     "fields": {
         "order": 4,
-        "product": 1,
-        "quantity": 1,
-        "unit_price": "0.00"
-    }
-},
-{
-    "model": "componentes.orderitem",
-    "pk": 5,
-    "fields": {
-        "order": 5,
-        "product": 1,
-        "quantity": 1,
-        "unit_price": "0.00"
-    }
-},
-{
-    "model": "componentes.orderitem",
-    "pk": 6,
-    "fields": {
-        "order": 6,
-        "product": 1,
-        "quantity": 1,
-        "unit_price": "0.00"
-    }
-},
-{
-    "model": "componentes.orderitem",
-    "pk": 7,
-    "fields": {
-        "order": 7,
-        "product": 1,
-        "quantity": 1,
-        "unit_price": "0.00"
-    }
-},
-{
-    "model": "componentes.orderitem",
-    "pk": 8,
-    "fields": {
-        "order": 8,
         "product": 1,
         "quantity": 1,
         "unit_price": "0.00"
