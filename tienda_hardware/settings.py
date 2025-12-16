@@ -26,12 +26,18 @@ DEFAULT_FROM_EMAIL = 'no-reply@tiendahardware.local'
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7n^40f7&4zcv$op+z5d2h7c4n6ro*on)^0nue)ou%0oc-l_w6v'
+#SECRET_KEY = 'django-insecure-7n^40f7&4zcv$op+z5d2h7c4n6ro*on)^0nue)ou%0oc-l_w6v'
+import environ
+import os
+
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'),True)
+env = environ.Env()
+SECRET_KEY =  env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', 'antonior29.pythonanywhere.com','0.0.0.0']
 
 
 # Application definition

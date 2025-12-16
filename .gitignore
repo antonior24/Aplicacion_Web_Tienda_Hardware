@@ -26,3 +26,6 @@ myvenv
 db.sqlite3
 #cache
 __pycache__
+
+#Env file
+.env
